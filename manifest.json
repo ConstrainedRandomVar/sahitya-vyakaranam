@@ -1,0 +1,10 @@
+{
+  "name": "साहित्य-व्याकरणम् — Sanskrit kāvya reader",
+  "short_name": "साहित्य-व्याकरणम्",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8f8fc",
+  "theme_color": "#312e81",
+  "icons": []
+}

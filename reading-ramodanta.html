@@ -1,0 +1,390 @@
+<!doctype html><html lang="sa"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>श्रीरामोदन्तम् (Śrīrāmodantam)</title><style>:root{--bg:#fbfaf7;--card:#fff;--ink:#20242c;--muted:#6b7280;--line:#e6e2da;--moola:#7c5a1e;--mng:#15803d;--morph:#1a56db;--role:#b45309;--sam:#6d28d9;--brand:#4f46e5;--tm:#a7f3d0;--topicbg:#edf1f8}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14161a;--card:#1c1f26;--ink:#e6e8ec;--muted:#9aa1ac;--line:#2b2f38;--moola:#d9b877;--mng:#83e0a0;--morph:#7ab0ff;--role:#f8b06a;--sam:#c9b6f7;--brand:#a5b4fc;--tm:#15803d;--topicbg:#1e2431}}
+:root[data-theme=dark]{--bg:#14161a;--card:#1c1f26;--ink:#e6e8ec;--muted:#9aa1ac;--line:#2b2f38;--moola:#d9b877;--mng:#83e0a0;--morph:#7ab0ff;--role:#f8b06a;--sam:#c9b6f7;--brand:#a5b4fc;--tm:#15803d;--topicbg:#1e2431}
+/* महावाक्य hue (#9c named token) + verse-level identity pill, ALWAYS shown (no toggle since 2026-09-22); two shades by sub-type, styled hover note (not native title=) */
+:root{--maha:#db2777}@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--maha:#f472b6}}:root[data-theme=dark]{--maha:#f472b6}
+:root{--tarka:#5b6472;--drs:#a16207}@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--tarka:#9aa7b8;--drs:#fcd34d}}:root[data-theme=dark]{--tarka:#9aa7b8;--drs:#fcd34d}
+/* प्रमाण reserved hue (#9c named token, 298°) — reserved in every renderer palette; graded refs only (VC, SD so far) */
+:root{--praman:#ad24b2;--prb-shruti:#5c0f60;--prb-yukti:#7a1a7e;--prb-anubhava:#9d1fa2}@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--praman:#e67bea;--prb-shruti:#d977de;--prb-yukti:#e67bea;--prb-anubhava:#f3b6f5}}:root[data-theme=dark]{--praman:#e67bea;--prb-shruti:#d977de;--prb-yukti:#e67bea;--prb-anubhava:#f3b6f5}
+/* gloss-card accent + separator — the card is INVERTED (bg=--ink), so these flip with the theme (#9c; a literal light accent vanished on the light dark-mode card) */
+:root{--tipacc:#a7f3d0;--tipline:rgba(255,255,255,.2)}@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--tipacc:#065f46;--tipline:rgba(0,0,0,.18)}}:root[data-theme=dark]{--tipacc:#065f46;--tipline:rgba(0,0,0,.18)}
+/* प्रमाण श्रुति/युक्ति/अनुभव pills — ONE reserved hue --praman (298°), 3 explicit lightness steps (AA ≥4.5:1 on the tinted pill, both themes); always-on; COPY-SAFE (empty span + ::after + user-select:none) */
+.prb{display:inline-block;font-size:10px;font-weight:700;line-height:1.4;padding:0 6px;border-radius:9px;margin-inline-end:4px;vertical-align:1px;border:1px solid;font-family:"Noto Serif Devanagari",serif;user-select:none;-webkit-user-select:none;-moz-user-select:none}
+.prb-shruti{color:var(--prb-shruti);border-color:var(--prb-shruti);background:color-mix(in srgb,var(--praman) 12%,transparent)}
+.prb-yukti{color:var(--prb-yukti);border-color:var(--prb-yukti);background:color-mix(in srgb,var(--praman) 12%,transparent)}
+.prb-anubhava{color:var(--prb-anubhava);border-color:var(--prb-anubhava);background:color-mix(in srgb,var(--praman) 12%,transparent)}
+.prb-shruti::after{content:"श्रुतिः"}.prb-yukti::after{content:"युक्तिः"}.prb-anubhava::after{content:"अनुभवः"}
+.maha-mark{display:inline-block;position:relative;font-size:10px;font-weight:700;line-height:1.4;padding:0 6px;border-radius:9px;margin-inline-end:5px;vertical-align:1px;border:1px solid var(--maha);color:var(--maha);font-family:"Noto Serif Devanagari",serif;cursor:help;user-select:none;-webkit-user-select:none;-moz-user-select:none}
+.maha-mark::before{content:"महावाक्यम्"}   /* label via generated content — never captured by copy/select */
+.maha-mark-muk{background:color-mix(in srgb,var(--maha) 16%,transparent)}
+.maha-mark-bad{background:color-mix(in srgb,var(--maha) 6%,transparent);border-style:dashed}
+/* concession (अभ्युपगमः) superscript on the bhāṣya/ṭīkā — citation श्रु/स्मृ/न्या + तर्क हे॰/निग॰ RETIRED 2026-09-23 (CLAUDE.md #9c) */
+.dm-conc::after{vertical-align:super;font-size:.56em;font-weight:700;color:var(--muted);margin-inline-start:1px;font-family:"Noto Serif Devanagari",serif;content:"अभ्यु॰"}
+.dr-mark{display:inline-block;font-size:10px;font-weight:700;line-height:1.4;padding:0 6px;border-radius:9px;margin-inline-end:4px;vertical-align:1px;border:1px solid var(--drs);color:var(--drs);background:color-mix(in srgb,var(--drs) 12%,transparent);font-family:"Noto Serif Devanagari",serif;user-select:none;-webkit-user-select:none;-moz-user-select:none}
+.dr-mark-upamana::before{content:"उपमानम्"}.dr-mark-upameya::before{content:"उपमेयम्"}  /* labels via generated content — copy-safe */
+.maha-mark[data-note]:hover::after,.maha-mark[data-note]:focus::after{content:attr(data-note);position:absolute;left:0;top:calc(100% + 4px);z-index:30;max-width:min(80vw,340px);white-space:normal;font-size:11.5px;font-weight:400;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:5px 9px;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding:26px 22px 90px}h1{font-size:22px;margin:0 0 2px}.sub{color:var(--muted);font-size:13px;margin:0 0 16px}
+.legend{padding:11px 14px;margin:0 0 20px;background:var(--card);border:1px solid var(--line);border-radius:12px;font-size:12.5px;color:var(--muted)}
+.v{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin:0 0 16px}
+.rf{font-size:12px;color:var(--muted);letter-spacing:.04em;margin-bottom:6px}
+/* topic band (SAD per-verse viṣaya · AB section · VC two-tier) — its own card ABOVE the verse, tinted --topicbg so a
+   topic reads apart from the prelude (--introbg-style dashed zone), mūla and commentary; role colours = left border (#9c) */
+.secband{margin:22px 0 8px;padding:6px 16px;background:var(--topicbg);border:1px solid var(--line);border-left:4px solid var(--muted);border-radius:8px;font-size:13px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}
+.secband .st{font-weight:600;color:var(--ink)} .secband .srange{margin-left:auto;font-size:11px;color:var(--muted);white-space:nowrap}
+.secband.r-purvapaksha{border-left-color:var(--purva)} .secband.r-siddhanta{border-left-color:var(--sid)} .secband.r-drishtanta{border-left-color:var(--drs)} .secband.r-lakshana{border-left-color:var(--lakshana)} .secband.r-phalita{border-left-color:var(--phalita,var(--import))}
+/* avatārikā (prelude) — dashed pre-zone ABOVE the mūla; bhāṣya content, hidden in मूलम्-only mode.
+   Small-caps ::before label matches the prasthānatrayī pre-zone (CLAUDE.md consistency). */
+.pre-zone{margin:0 0 12px;padding:10px 14px 6px;border-left:3px dashed var(--muted);border-radius:0 10px 10px 0}
+.pre-zone::before{content:"अवतारिका";display:block;font-family:-apple-system,sans-serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);opacity:.8;margin-bottom:4px}
+/* the ONLY rule is the pre-zone's dashed gray border — strip inner .avat/.gs solid borders (no double line) */
+.pre-zone .avat,.pre-zone .gs{border:0;padding:0;margin:0 0 4px}
+body.view-mula .pre-zone{display:none}
+.moola,.vjoin,.vpada{font-family:"Noto Serif Devanagari","Kohinoor Devanagari","Devanagari MT",serif}
+.moola{font-size:22px;line-height:2.0;color:var(--moola);font-weight:600}
+/* सन्धि layer: the pretty metrical verse (centred pāda-lines) */
+.vjoin{font-size:22px;line-height:1.85;color:var(--moola);font-weight:600;text-align:center}
+.vjoin .jl{margin:1px 0}
+.vjoin .dnd{color:var(--muted);font-weight:400;padding:0 .15em}
+/* पद layer: sandhi-split hover words in matching pāda-lines */
+.vpada{font-size:22px;line-height:2.0;color:var(--moola);font-weight:600}
+.vpada .pl{margin:2px 0}
+.vpada .dnd{color:var(--muted);font-weight:400;padding:0 .15em}
+/* सन्धि MODE (default): joined verse is the star; पद becomes a muted word-help line under it */
+body.mode-sandhi .vpada:not(.single){font-size:14.5px;line-height:1.85;color:var(--muted);font-weight:500;margin-top:7px;padding-top:7px;border-top:1px dashed var(--line)}
+body.mode-sandhi .vpada:not(.single) .pl{margin:1px 0}
+/* पद MODE: hide the joined verse; the split words become primary */
+body.mode-pada .vjoin{display:none}
+.modebar{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;margin:0 0 18px}
+.modebar button{float:none;border:none;border-radius:0;background:var(--card);color:var(--muted);padding:6px 15px;font-size:12.5px;border-right:1px solid var(--line)}
+.modebar button:last-child{border-right:none}
+.modebar button.on{background:var(--morph);color:#fff}
+.en{color:var(--muted);font-size:14px;font-style:italic;margin-top:8px}
+.trans{color:var(--muted);font-size:14px;line-height:1.55;margin-top:10px;padding-top:8px;border-top:1px solid var(--line)}
+.w{cursor:help}.w:hover{background:rgba(120,120,120,.14);border-radius:3px}
+#tip{position:fixed;z-index:99;max-width:min(340px,92vw);background:var(--ink);color:var(--bg);font-size:13px;line-height:1.5;padding:10px 13px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.35);pointer-events:none;opacity:0;transition:opacity .1s}
+#tip.pinned{pointer-events:auto;user-select:text;-webkit-user-select:text;cursor:text;box-shadow:0 10px 30px rgba(0,0,0,.5),0 0 0 2px var(--tipacc)}
+#tip .tw{font-family:"Noto Serif Devanagari",serif;font-size:16px;font-weight:700;color:var(--bg)}
+#tip .tm{color:var(--tm);font-style:italic;margin:2px 0 5px}#tip .row{margin:1px 0}#tip .lb{opacity:.6;font-size:11px}
+#tip .peel{margin-top:5px;padding-top:5px;border-top:1px solid var(--tipline);font-family:"Noto Serif Devanagari",serif}
+button{font:inherit;font-size:13px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer;float:right}
+.chapgrid{display:flex;flex-wrap:wrap;gap:10px}.chapgrid a{display:inline-block;padding:12px 18px;background:var(--card);border:1px solid var(--line);border-radius:10px;text-decoration:none;font-weight:600;color:var(--morph)}
+/* अनुवादः knob — ALL English translation hidden by default: the mūla clause-gloss line (.trans-layer) AND
+   the bhāṣya gloss sentence translations (.gtr, incl. the edition-unit .moolatr). (Harsha 2026-09-04) */
+body:not(.trans-on) .trans-layer,body:not(.trans-on) .gtr{display:none}
+/* भाष्यम् toggle — मूलम् (default) hides the commentary; मूलम्+भाष्यम् shows it. The 3 ardha stretches
+   swap whole blocks: spine integers (.ardha-int) in मूलम् mode ↔ edition .5 units (.ardha-half) in भाष्यम्. */
+body.view-mula .bhashya-layer{display:none}
+body.view-mula .ardha-half{display:none}
+body.view-both .ardha-int{display:none}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:0 8px}
+.viewbar{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;margin:0 8px 18px 0}
+.viewbar button{float:none;border:none;border-radius:0;background:var(--card);color:var(--muted);padding:6px 15px;font-size:12.5px;border-right:1px solid var(--line);cursor:pointer}
+.viewbar button:last-child{border-right:none}
+.viewbar button.on{background:var(--role);color:#fff}
+.tglbtn{float:none;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--muted);padding:6px 14px;font-size:12.5px;margin:0 0 18px 0;cursor:pointer}
+.tglbtn.on{background:var(--mng);color:#fff;border-color:var(--mng)}
+
+</style></head><body class="mode-sandhi view-mula"><div class="wrap">
+<a href="index.html" style="color:var(--brand);font-weight:800;font-size:14px;text-decoration:none;font-family:'Noto Serif Devanagari',serif" title="साहित्य-व्याकरणम् — Home" aria-label="साहित्य-व्याकरणम् — Home">साहित्य-व्याकरणम्</a><a href="index.html" style="float:right;margin:6px 0 0 10px;color:var(--muted);font-size:13px;text-decoration:none">← back</a><button id="tog">◐ theme</button>
+<h1>श्रीरामोदन्तम् (Śrīrāmodantam) — reading (मनन)</h1><p class="sub">hover-to-read · analysis from the Gemini kāraka dataset</p>
+
+<style>#reading-nav{position:sticky;top:0;z-index:50;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin:0 0 18px;box-shadow:0 2px 10px rgba(0,0,0,.04);display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}
+#reading-nav .rn-tools{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+#reading-nav .rn-tools>*{margin:0 !important}
+#reading-nav .rn-picker{display:inline-flex;flex-wrap:wrap;align-items:center;gap:4px 6px}
+#reading-nav .rn-tools+.rn-picker{margin-left:auto}
+
+.reading-nav{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:flex-end}
+.reading-nav .navlvl{display:flex;flex-direction:column;gap:2px;font-size:11px;color:var(--muted,#667)}
+.reading-nav select{font:inherit;font-size:14px;color:var(--ink,#111);background:var(--bg,#fff);border:1px solid var(--line,#ccc);border-radius:8px;padding:5px 9px;min-width:64px}
+.v{scroll-margin-top:78px}
+@keyframes navflash{0%{background:rgba(120,120,180,.28)}100%{background:transparent}}
+.v.navhit{animation:navflash 1.6s ease-out}</style>
+<div id="reading-nav"><div class="rn-tools"><div class="modebar" role="radiogroup" aria-label="verse rendering"><button data-mode="sandhi" role="radio">सन्धि · verse</button><button data-mode="pada" role="radio">पद · split</button></div><button class="tglbtn" id="transtog" aria-pressed="false" title="अनुवादः दर्शय / गोपय">अनुवादः</button><button class="tglbtn" id="anvtog" aria-pressed="false" title="अन्वयः दर्शय / गोपय">अन्वयः</button></div><div class="rn-picker" id="reading-nav-picker"></div></div>
+<script>'use strict';
+/*
+ * reading-nav.js — THE ONE shared cascading verse-navigator for the whole app.
+ * ============================================================================
+ * A single source of truth (LEVELS + cascade logic + rendering) used by BOTH:
+ *   1. the static svādhyāya reading pages (मनन bhāṣya + पदार्थ mūla) — via nav.js's buildNav,
+ *      which now emits a container + calls ReadingNav.mount(...) at runtime; and
+ *   2. the in-app "read-a-verse" picker (app.js renderReadingPicker).
+ * Fix the chapter/verse scheme HERE and it percolates to every page — no per-surface drift/creep.
+ *
+ * UMD: works as a browser global (window.ReadingNav) AND a Node require() (nav.js / build tooling).
+ *
+ * API
+ *   ReadingNav.LEVELS                       // { slug: [level-label, ...] }  (per-text native divisions)
+ *   ReadingNav.levelsFor(slug, refs)        // -> [labels]; falls back by ref-depth for an unlisted text
+ *   ReadingNav.comps(ref, nlev)             // -> ref split into nlev comps (extra trailing comps folded into last)
+ *   ReadingNav.optionsFor(refs, nlev, L, prefix)  // -> distinct options at level L under `prefix`
+ *   ReadingNav.STYLE                        // the navbar <style> text (injected once per page)
+ *   ReadingNav.mount(container, opts)       // render cascading <select>s + wire cascade & selection
+ *
+ * mount(container, {
+ *   slug,                 // text slug (LEVELS key)
+ *   refs,                 // ORDERED array of every ref in the text, e.g. ["1.1.1","1.1.2", ...]
+ *   curRef,               // optional: pre-select this ref
+ *   mode,                 // 'jump' (reading pages) | 'callback' (picker)
+ *   pageByRef, curFile,   // 'jump' mode only: {ref:file} + this page's file → same-page scroll or cross-page #v-<ref>
+ *   onSelect,             // called with (ref) whenever the selection changes (both modes)
+ * })  ->  { getRef(), setRef(ref), refresh() }
+ */
+(function (root, factory) {
+  const mod = factory();
+  if (typeof module !== 'undefined' && module.exports) module.exports = mod;   // Node (nav.js, tooling)
+  if (typeof window !== 'undefined') window.ReadingNav = mod;                   // browser global
+})(this, function () {
+
+  // Level labels per text — MUST span the full ref depth (uniform depth per text). Single source; keep this
+  // the only copy. (Was duplicated in nav.js; nav.js now imports it from here.)
+  const LEVELS = {
+    Gita: ['अध्याय', 'श्लोक'], Isha: ['अध्याय', 'मन्त्र'], Kena: ['खण्ड', 'मन्त्र'], Kena_pada: ['खण्ड', 'मन्त्र'], Kena_vakya: ['खण्ड', 'मन्त्र'],
+    Kathaka: ['अध्याय', 'वल्ली', 'मन्त्र'], Prashna: ['प्रश्न', 'मन्त्र'], Mundaka: ['मुण्डक', 'खण्ड', 'मन्त्र'],
+    Mandukya: ['प्रकरण', 'मन्त्र'], Aitareya: ['अध्याय', 'खण्ड', 'मन्त्र'], Chandogya: ['अध्याय', 'खण्ड', 'मन्त्र'],
+    Taitiriya: ['वल्ली', 'अनुवाक', 'मन्त्र'], Brha: ['अध्याय', 'ब्राह्मण', 'मन्त्र'], BS: ['अध्याय', 'पाद', 'सूत्र'],
+    VC: ['श्लोक'], PD: ['अध्याय', 'श्लोक'], AB: ['श्लोक'], UPS: ['श्लोक'], SAD: ['श्लोक'], Vicharasagara: ['तरङ्ग', 'आवर्त'],
+  };
+  const FALLBACK = ['भाग', 'उप', 'क्रम', 'मन्त्र'];
+
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+  function levelsFor(slug, refs) {
+    let lv = LEVELS[slug];
+    if (!lv) { const depth = Math.max(1, ...(refs || []).map(r => String(r).split('.').length)); lv = FALLBACK.slice(Math.max(0, FALLBACK.length - depth)); }
+    return lv;
+  }
+
+  // Split a ref into exactly nlev components; a ref DEEPER than nlev folds its extra trailing comps into the
+  // last level (e.g. brihad "3.9.28.1" under a 3-level scheme → ["3","9","28.1"]). Mirrors nav.js's old comps().
+  function comps(ref, nlev) {
+    let p = String(ref).split('.');
+    if (p.length > nlev) p = p.slice(0, nlev - 1).concat(p.slice(nlev - 1).join('.'));
+    return p;
+  }
+
+  // Distinct options at level L, given the chosen values for levels 0..L-1 (`prefix`), in first-seen order.
+  function optionsFor(refs, nlev, level, prefix) {
+    const out = [], seen = {};
+    for (const r of refs) {
+      const p = comps(r, nlev);
+      if (p.length <= level) continue;
+      let ok = true;
+      for (let i = 0; i < level; i++) if (p[i] !== prefix[i]) { ok = false; break; }
+      if (ok && !seen[p[level]]) { seen[p[level]] = 1; out.push(p[level]); }
+    }
+    return out;
+  }
+
+  // Inner styling, keyed on the `.reading-nav` CLASS that mount() adds to its container — so it applies in
+  // BOTH surfaces regardless of the container's id (reading pages ALSO get the sticky card bar via nav.js's
+  // own #reading-nav rule; the picker gets just this inner row).
+  const STYLE = `
+.reading-nav{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:flex-end}
+.reading-nav .navlvl{display:flex;flex-direction:column;gap:2px;font-size:11px;color:var(--muted,#667)}
+.reading-nav select{font:inherit;font-size:14px;color:var(--ink,#111);background:var(--bg,#fff);border:1px solid var(--line,#ccc);border-radius:8px;padding:5px 9px;min-width:64px}
+.v{scroll-margin-top:78px}
+@keyframes navflash{0%{background:rgba(120,120,180,.28)}100%{background:transparent}}
+.v.navhit{animation:navflash 1.6s ease-out}`;
+
+  // Render cascading <select>s into `container` and wire them. Returns a small controller.
+  function mount(container, opts) {
+    opts = opts || {};
+    const refs = (opts.refs || []).filter(r => r != null).map(String);
+    const slug = opts.slug;
+    const levels = levelsFor(slug, refs);
+    const nlev = levels.length;
+    if (refs.length < 2 && opts.mode !== 'callback') { container.innerHTML = ''; return { getRef: () => refs[0] || null, setRef: () => {}, setRefs: () => {}, refresh: () => {} }; }
+
+    container.classList.add('reading-nav');   // so ReadingNav.STYLE applies regardless of the container's id
+    container.innerHTML = levels.map((lb, i) => `<label class="navlvl"><span>${esc(lb)}</span><select data-lvl="${i}"></select></label>`).join('');
+    const sels = [].slice.call(container.querySelectorAll('select'));
+
+    function chosen(uptoLevel) { const a = []; for (let i = 0; i <= uptoLevel; i++) a.push(sels[i].value); return a; }
+    function fill(sel, options, val) { sel.innerHTML = options.map(o => `<option${o === val ? ' selected' : ''}>${esc(o)}</option>`).join(''); }
+    // (Re)build levels from `from` downward, each defaulting to its first valid option under the ones above.
+    function rebuild(from) { for (let L = from; L < sels.length; L++) { const o = optionsFor(refs, nlev, L, chosen(L - 1)); fill(sels[L], o, o[0]); } }
+    function currentRef() { return sels.map(s => s.value).join('.'); }
+    function setRef(ref) {
+      const p = comps(ref, nlev);
+      rebuild(0);
+      for (let L = 0; L < sels.length && L < p.length; L++) { const o = optionsFor(refs, nlev, L, p.slice(0, L)); fill(sels[L], o, p[L]); }
+    }
+    // Swap the ref list in place (same level structure) and repopulate the selects — used by VC's भाष्यम् toggle,
+    // where the picker options differ per mode (मूलम् integers ↔ edition units incl .5). Keeps the current
+    // selection if it survives the swap, else the caller's `keep`, else the first ref.
+    function setRefs(newRefs, keep) {
+      const nr = (newRefs || []).filter(r => r != null).map(String);
+      if (nr.length < 1) return;
+      const prev = currentRef();
+      refs.length = 0; Array.prototype.push.apply(refs, nr);   // mutate in place so the scrollspy closure sees it
+      setRef(nr.indexOf(prev) >= 0 ? prev : (keep != null && nr.indexOf(String(keep)) >= 0 ? String(keep) : nr[0]));
+    }
+
+    let spyUntil = 0;   // scrollspy suppression window: quiet the spy while a programmatic jump smooth-scrolls
+    // Pick the VISIBLE anchor for a ref. VC's ardha-region swap renders each affected verse under BOTH a spine
+    // `v-<ref>` (.ardha-int) and an edition-unit `vb-<ref>` (.ardha-half), and hides one via display:none per
+    // mode (मूलम् hides .ardha-half; भाष्यम् hides .ardha-int). Targeting the always-`v-` anchor scrolled to the
+    // hidden copy in भाष्यम् mode (picker "did nothing", gloss looked empty). display:none ⇒ offsetParent null.
+    function anchorFor(ref) {
+      const spine = document.getElementById('v-' + ref), unit = document.getElementById('vb-' + ref);
+      if (spine && spine.offsetParent !== null) return spine;
+      if (unit && unit.offsetParent !== null) return unit;
+      return spine || unit;   // neither visible (or non-VC text: no vb-) → the spine anchor / null
+    }
+    function jump(ref) {
+      if (opts.mode !== 'jump') return;
+      const file = opts.pageByRef ? opts.pageByRef[ref] : null;
+      if (file == null) return;
+      if (opts.curFile != null && file === opts.curFile) {
+        spyUntil = (typeof Date !== 'undefined' ? Date.now() : 0) + 700;   // don't flicker the picker through intermediate verses
+        const el = anchorFor(ref);
+        if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); el.classList.remove('navhit'); void el.offsetWidth; el.classList.add('navhit'); }
+      } else location.href = file + '#v-' + ref;
+    }
+    function onChange() { const ref = currentRef(); if (typeof opts.onSelect === 'function') opts.onSelect(ref); jump(ref); }
+    sels.forEach((s, L) => s.addEventListener('change', function () { rebuild(L + 1); onChange(); }));
+
+    // initial selection: explicit curRef → #v-<ref> hash → (jump mode) first ref ON THIS PAGE → first ref
+    // overall. The "first on this page" step matters for split texts (chandogya/brihad/gita spread across
+    // files): landing on page N with no hash must show page N's first verse, not the global first (nav.js parity).
+    let init = opts.curRef, fromHash = false;
+    if (!init && typeof location !== 'undefined') { const h = (location.hash || '').replace(/^#v-/, ''); if (h && refs.indexOf(h) >= 0) { init = h; fromHash = true; } }
+    if (!init && opts.mode === 'jump' && opts.pageByRef && opts.curFile != null) init = refs.find(r => opts.pageByRef[r] === opts.curFile) || null;
+    setRef(init || refs[0]);
+    // arriving via #v-<ref>: mirror nav.js's flash cue on the target verse.
+    if (fromHash && opts.mode === 'jump' && typeof document !== 'undefined') { const el = anchorFor(init); if (el) el.classList.add('navhit'); }
+
+    // scrollspy (jump mode only): keep the picker in sync with the verse at the top of the viewport as the
+    // reader scrolls. setRef only repaints the selects (no jump / no onSelect), so there is NO scroll↔jump
+    // feedback loop. The read-a-verse picker (mode 'callback') is untouched.
+    if (opts.mode === 'jump' && typeof document !== 'undefined' && typeof addEventListener !== 'undefined') {
+      // the "you are here" line = bottom of the nearest sticky/fixed ancestor of the nav (else top of viewport)
+      const stickyBottom = function () {
+        let e = container, best = 0;
+        while (e && e !== document.body && e.nodeType === 1) {
+          const cs = getComputedStyle(e);
+          if (cs.position === 'sticky' || cs.position === 'fixed') { const b = e.getBoundingClientRect().bottom; if (b > best) best = b; }
+          e = e.parentElement;
+        }
+        return best;
+      };
+      const spy = function () {
+        if (Date.now() < spyUntil) return;
+        const y = stickyBottom() + 8; let pick = null;
+        for (let i = 0; i < refs.length; i++) {
+          const el = anchorFor(refs[i]);
+          if (!el) continue;                                   // ref not on THIS page (split texts) → skip
+          if (el.getBoundingClientRect().top <= y) pick = refs[i];
+          else if (pick !== null) break;                       // first on-page verse below the line → done (verses are in order)
+        }
+        if (pick && pick !== currentRef()) setRef(pick);
+      };
+      let ticking = false;
+      addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; spy(); }); } }, { passive: true });
+    }
+
+    return { getRef: currentRef, setRef, setRefs, refresh: () => setRef(currentRef()) };
+  }
+
+  return { LEVELS, FALLBACK, levelsFor, comps, optionsFor, esc, STYLE, mount };
+});
+
+;(function(){if(window.ReadingNav)Object.assign(window.ReadingNav.LEVELS,{"RMD":["काण्ड","श्लोक"]});var el=document.getElementById('reading-nav-picker');if(el&&window.ReadingNav)window.__readingNav=window.ReadingNav.mount(el, {"slug":"RMD","refs":["1.1","1.2","1.3","1.4","1.5","1.6","1.7","1.8","1.9","1.10","1.11","1.12","1.13","1.14","1.15","1.16","1.17","1.18","1.19","1.20","1.21","1.22","1.23","1.24","1.25","1.26","1.27","1.28","1.29","1.30","1.31","1.32","1.33","1.34","1.35","1.36","1.37","1.38","1.39","1.40","2.1","2.2","2.3","2.4","2.5","2.6","2.7","2.8","2.9","2.10","2.11","2.12","2.13","2.14","2.15","2.16","2.17","2.18","2.19","2.20","3.1","3.2","3.3","3.4","3.5","3.6","3.7","3.8","3.9","3.10","3.11","3.12","3.13","3.14","3.15","3.16","3.17","3.18","3.19","3.20","3.21","3.22","3.23","3.24","3.25","3.26","3.27","3.28","4.1","4.2","4.3","4.4","4.5","4.6","4.7","4.8","4.9","4.10","4.11","4.12","4.13","4.14","4.15","4.16","4.17","4.18","4.19","4.20","5.1","5.2","5.3","5.4","5.5","5.6","5.7","5.8","5.9","5.10","5.11","5.12","5.13","5.14","6.1","6.2","6.3","6.4","6.5","6.6","6.7","6.8","6.9","6.10","6.11","6.12","6.13","6.14","6.15","6.16","6.17","6.18","6.19","6.20","6.21","6.22","6.23","6.24","6.25","6.26","6.27","6.28","6.29","6.30","6.31","6.32","6.33","6.34","6.35","6.36","6.37","6.38","6.39","6.40","6.41","6.42","6.43","6.44","6.45","6.46","6.47","6.48","6.49","6.50","6.51","6.52","6.53","6.54","6.55","6.56","6.57","6.58","6.59","6.60","6.61","6.62","6.63","6.64","6.65","6.66","6.67","6.68","7.1","7.2","7.3","7.4","7.5","7.6","7.7","7.8","7.9"],"pageByRef":{"1.1":"reading-ramodanta-1.html","1.2":"reading-ramodanta-1.html","1.3":"reading-ramodanta-1.html","1.4":"reading-ramodanta-1.html","1.5":"reading-ramodanta-1.html","1.6":"reading-ramodanta-1.html","1.7":"reading-ramodanta-1.html","1.8":"reading-ramodanta-1.html","1.9":"reading-ramodanta-1.html","1.10":"reading-ramodanta-1.html","1.11":"reading-ramodanta-1.html","1.12":"reading-ramodanta-1.html","1.13":"reading-ramodanta-1.html","1.14":"reading-ramodanta-1.html","1.15":"reading-ramodanta-1.html","1.16":"reading-ramodanta-1.html","1.17":"reading-ramodanta-1.html","1.18":"reading-ramodanta-1.html","1.19":"reading-ramodanta-1.html","1.20":"reading-ramodanta-1.html","1.21":"reading-ramodanta-1.html","1.22":"reading-ramodanta-1.html","1.23":"reading-ramodanta-1.html","1.24":"reading-ramodanta-1.html","1.25":"reading-ramodanta-1.html","1.26":"reading-ramodanta-1.html","1.27":"reading-ramodanta-1.html","1.28":"reading-ramodanta-1.html","1.29":"reading-ramodanta-1.html","1.30":"reading-ramodanta-1.html","1.31":"reading-ramodanta-1.html","1.32":"reading-ramodanta-1.html","1.33":"reading-ramodanta-1.html","1.34":"reading-ramodanta-1.html","1.35":"reading-ramodanta-1.html","1.36":"reading-ramodanta-1.html","1.37":"reading-ramodanta-1.html","1.38":"reading-ramodanta-1.html","1.39":"reading-ramodanta-1.html","1.40":"reading-ramodanta-1.html","2.1":"reading-ramodanta-2.html","2.2":"reading-ramodanta-2.html","2.3":"reading-ramodanta-2.html","2.4":"reading-ramodanta-2.html","2.5":"reading-ramodanta-2.html","2.6":"reading-ramodanta-2.html","2.7":"reading-ramodanta-2.html","2.8":"reading-ramodanta-2.html","2.9":"reading-ramodanta-2.html","2.10":"reading-ramodanta-2.html","2.11":"reading-ramodanta-2.html","2.12":"reading-ramodanta-2.html","2.13":"reading-ramodanta-2.html","2.14":"reading-ramodanta-2.html","2.15":"reading-ramodanta-2.html","2.16":"reading-ramodanta-2.html","2.17":"reading-ramodanta-2.html","2.18":"reading-ramodanta-2.html","2.19":"reading-ramodanta-2.html","2.20":"reading-ramodanta-2.html","3.1":"reading-ramodanta-3.html","3.2":"reading-ramodanta-3.html","3.3":"reading-ramodanta-3.html","3.4":"reading-ramodanta-3.html","3.5":"reading-ramodanta-3.html","3.6":"reading-ramodanta-3.html","3.7":"reading-ramodanta-3.html","3.8":"reading-ramodanta-3.html","3.9":"reading-ramodanta-3.html","3.10":"reading-ramodanta-3.html","3.11":"reading-ramodanta-3.html","3.12":"reading-ramodanta-3.html","3.13":"reading-ramodanta-3.html","3.14":"reading-ramodanta-3.html","3.15":"reading-ramodanta-3.html","3.16":"reading-ramodanta-3.html","3.17":"reading-ramodanta-3.html","3.18":"reading-ramodanta-3.html","3.19":"reading-ramodanta-3.html","3.20":"reading-ramodanta-3.html","3.21":"reading-ramodanta-3.html","3.22":"reading-ramodanta-3.html","3.23":"reading-ramodanta-3.html","3.24":"reading-ramodanta-3.html","3.25":"reading-ramodanta-3.html","3.26":"reading-ramodanta-3.html","3.27":"reading-ramodanta-3.html","3.28":"reading-ramodanta-3.html","4.1":"reading-ramodanta-4.html","4.2":"reading-ramodanta-4.html","4.3":"reading-ramodanta-4.html","4.4":"reading-ramodanta-4.html","4.5":"reading-ramodanta-4.html","4.6":"reading-ramodanta-4.html","4.7":"reading-ramodanta-4.html","4.8":"reading-ramodanta-4.html","4.9":"reading-ramodanta-4.html","4.10":"reading-ramodanta-4.html","4.11":"reading-ramodanta-4.html","4.12":"reading-ramodanta-4.html","4.13":"reading-ramodanta-4.html","4.14":"reading-ramodanta-4.html","4.15":"reading-ramodanta-4.html","4.16":"reading-ramodanta-4.html","4.17":"reading-ramodanta-4.html","4.18":"reading-ramodanta-4.html","4.19":"reading-ramodanta-4.html","4.20":"reading-ramodanta-4.html","5.1":"reading-ramodanta-5.html","5.2":"reading-ramodanta-5.html","5.3":"reading-ramodanta-5.html","5.4":"reading-ramodanta-5.html","5.5":"reading-ramodanta-5.html","5.6":"reading-ramodanta-5.html","5.7":"reading-ramodanta-5.html","5.8":"reading-ramodanta-5.html","5.9":"reading-ramodanta-5.html","5.10":"reading-ramodanta-5.html","5.11":"reading-ramodanta-5.html","5.12":"reading-ramodanta-5.html","5.13":"reading-ramodanta-5.html","5.14":"reading-ramodanta-5.html","6.1":"reading-ramodanta-6.html","6.2":"reading-ramodanta-6.html","6.3":"reading-ramodanta-6.html","6.4":"reading-ramodanta-6.html","6.5":"reading-ramodanta-6.html","6.6":"reading-ramodanta-6.html","6.7":"reading-ramodanta-6.html","6.8":"reading-ramodanta-6.html","6.9":"reading-ramodanta-6.html","6.10":"reading-ramodanta-6.html","6.11":"reading-ramodanta-6.html","6.12":"reading-ramodanta-6.html","6.13":"reading-ramodanta-6.html","6.14":"reading-ramodanta-6.html","6.15":"reading-ramodanta-6.html","6.16":"reading-ramodanta-6.html","6.17":"reading-ramodanta-6.html","6.18":"reading-ramodanta-6.html","6.19":"reading-ramodanta-6.html","6.20":"reading-ramodanta-6.html","6.21":"reading-ramodanta-6.html","6.22":"reading-ramodanta-6.html","6.23":"reading-ramodanta-6.html","6.24":"reading-ramodanta-6.html","6.25":"reading-ramodanta-6.html","6.26":"reading-ramodanta-6.html","6.27":"reading-ramodanta-6.html","6.28":"reading-ramodanta-6.html","6.29":"reading-ramodanta-6.html","6.30":"reading-ramodanta-6.html","6.31":"reading-ramodanta-6.html","6.32":"reading-ramodanta-6.html","6.33":"reading-ramodanta-6.html","6.34":"reading-ramodanta-6.html","6.35":"reading-ramodanta-6.html","6.36":"reading-ramodanta-6.html","6.37":"reading-ramodanta-6.html","6.38":"reading-ramodanta-6.html","6.39":"reading-ramodanta-6.html","6.40":"reading-ramodanta-6.html","6.41":"reading-ramodanta-6.html","6.42":"reading-ramodanta-6.html","6.43":"reading-ramodanta-6.html","6.44":"reading-ramodanta-6.html","6.45":"reading-ramodanta-6.html","6.46":"reading-ramodanta-6.html","6.47":"reading-ramodanta-6.html","6.48":"reading-ramodanta-6.html","6.49":"reading-ramodanta-6.html","6.50":"reading-ramodanta-6.html","6.51":"reading-ramodanta-6.html","6.52":"reading-ramodanta-6.html","6.53":"reading-ramodanta-6.html","6.54":"reading-ramodanta-6.html","6.55":"reading-ramodanta-6.html","6.56":"reading-ramodanta-6.html","6.57":"reading-ramodanta-6.html","6.58":"reading-ramodanta-6.html","6.59":"reading-ramodanta-6.html","6.60":"reading-ramodanta-6.html","6.61":"reading-ramodanta-6.html","6.62":"reading-ramodanta-6.html","6.63":"reading-ramodanta-6.html","6.64":"reading-ramodanta-6.html","6.65":"reading-ramodanta-6.html","6.66":"reading-ramodanta-6.html","6.67":"reading-ramodanta-6.html","6.68":"reading-ramodanta-6.html","7.1":"reading-ramodanta-7.html","7.2":"reading-ramodanta-7.html","7.3":"reading-ramodanta-7.html","7.4":"reading-ramodanta-7.html","7.5":"reading-ramodanta-7.html","7.6":"reading-ramodanta-7.html","7.7":"reading-ramodanta-7.html","7.8":"reading-ramodanta-7.html","7.9":"reading-ramodanta-7.html"},"curFile":"reading-ramodanta.html","mode":"jump"});})();</script><div class="legend">Hover on any word for its analysis — <span style="color:var(--mng)">meaning</span>, vibhakti (case·vacana·liṅga), <span style="color:var(--role)">kāraka role</span>, and recursive <span style="color:var(--sam)">samāsa vigraha</span>. Generated (not hand-curated). <span style="color:var(--maha)">महावाक्यम्</span> pills mark human-verified identity equations — मुख्य / बाधायाम्.</div><div class="chapgrid"><a href="reading-ramodanta-1.html">बालकाण्डः</a><a href="reading-ramodanta-2.html">अयोध्याकाण्डः</a><a href="reading-ramodanta-3.html">आरण्यकाण्डः</a><a href="reading-ramodanta-4.html">किष्किन्धाकाण्डः</a><a href="reading-ramodanta-5.html">सुन्दरकाण्डः</a><a href="reading-ramodanta-6.html">युद्धकाण्डः</a><a href="reading-ramodanta-7.html">उत्तरकाण्डः</a></div></div><div id="tip"></div><script>const G={};const tip=document.getElementById('tip');
+(function(){var K='vvMetMode';function set(m){document.body.classList.remove('mode-sandhi','mode-pada');document.body.classList.add('mode-'+m);document.querySelectorAll('.modebar button').forEach(function(b){b.classList.toggle('on',b.dataset.mode===m);});try{localStorage.setItem(K,m);}catch(e){}}
+document.querySelectorAll('.modebar button').forEach(function(b){b.addEventListener('click',function(){set(b.dataset.mode);});});
+var init='sandhi';try{init=localStorage.getItem(K)||'sandhi';}catch(e){}set(init);})();
+(function(){var K='vvTransMode';var btn=document.getElementById('transtog');if(!btn)return;function set(on){document.body.classList.toggle('trans-on',on);btn.classList.toggle('on',on);btn.setAttribute('aria-pressed',on?'true':'false');try{localStorage.setItem(K,on?'1':'0');}catch(e){}}btn.addEventListener('click',function(){set(!document.body.classList.contains('trans-on'));});var it=false;try{it=localStorage.getItem(K)==='1';}catch(e){}set(it);})();(function(){var K='vvAnvMode';var btn=document.getElementById('anvtog');if(!btn)return;function set(on){document.body.classList.toggle('anvaya-on',on);btn.classList.toggle('on',on);btn.setAttribute('aria-pressed',on?'true':'false');try{localStorage.setItem(K,on?'1':'0');}catch(e){}}btn.addEventListener('click',function(){set(!document.body.classList.contains('anvaya-on'));});var it=false;try{it=localStorage.getItem(K)==='1';}catch(e){}set(it);})();
+function html(d){let h='<div class="tw">'+d.w+'</div>';if(d.mng)h+='<div class="tm">'+d.mng+'</div>';
+if(d.g)h+='<div class="row"><span class="lb">व्याकरणम्</span> '+d.g+'</div>';
+if(d.role||d.sutra)h+='<div class="row"><span class="lb">kāraka</span> '+(d.role||'—')+(d.sutra?' <span class="lb">सूत्र</span> '+d.sutra:'')+'</div>';
+if(d.sam)h+='<div class="row"><span class="lb">samāsa</span> '+d.sam+'</div>';
+if(d.peel&&d.peel.length)h+='<div class="peel">'+d.peel.join('<br>')+'</div>';return h;}
+// anchor the tip to the tapped word: centred below it, flipped above when near the viewport bottom,
+// clamped to the screen width — so it never lands off-screen / needs scrolling (esp. mobile, right column).
+function place(el){const r=el.getBoundingClientRect();const tw=tip.offsetWidth||300,th=tip.offsetHeight||80,m=8;
+  let left=r.left+r.width/2-tw/2;left=Math.max(m,Math.min(left,innerWidth-tw-m));
+  let top=r.bottom+8;if(top+th>innerHeight-m)top=Math.max(m,r.top-th-8);
+  tip.style.left=left+'px';tip.style.top=top+'px';}
+function show(t){const d=G[t.dataset.k];if(!d)return;tip.innerHTML=html(d)+(window.__vcMulaJump?window.__vcMulaJump(t):'');tip.style.opacity=1;if(pinned)tip.classList.add('pinned');place(t);}
+const touch=('ontouchstart'in window)||navigator.maxTouchPoints>0;
+// PIN: click a word to pin the tooltip (selectable/copyable); hover stays preview-only. Additive & sync-safe
+// (no preventDefault/stopImmediatePropagation → sync.js onWordTap + Esc/click-empty clears still fire).
+let pinned=false;
+function hideTip(force){if(pinned&&!force)return;pinned=false;tip.style.opacity=0;tip.classList.remove('pinned');}
+document.addEventListener('mouseover',e=>{if(touch||pinned)return;const t=e.target.closest('.w');if(t)show(t);});
+document.addEventListener('mouseout',e=>{if(touch||pinned)return;if(e.target.closest('.w'))tip.style.opacity=0;});
+document.addEventListener('click',e=>{if(tip.contains(e.target))return;const t=e.target.closest('.w');if(t){pinned=true;show(t);tip.classList.add('pinned');return;}hideTip(true);});
+window.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='Esc')hideTip(true);});
+tip.addEventListener('click',e=>{const jr=e.target.closest('.jrow');if(jr&&window.__vcJumpTo&&window.__vcNav){e.stopPropagation();hideTip(true);window.__vcNav(window.__vcJumpTo);}});   // mūla → commentary (cross-layer link)
+const r=document.documentElement;document.getElementById('tog').onclick=()=>{const c=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');r.setAttribute('data-theme',c=='dark'?'light':'dark')};</script><style>
+#rpt-btn{position:fixed;right:14px;bottom:14px;z-index:80;font:inherit;font-size:13px;
+  background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:20px;
+  padding:8px 14px;box-shadow:0 3px 12px rgba(0,0,0,.18);cursor:pointer}
+#rpt-btn:hover{background:var(--bg)}
+#rpt-ov{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:16px}
+#rpt-ov.on{display:flex}
+#rpt-box{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;
+  max-width:440px;width:100%;padding:18px;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+#rpt-box h3{margin:0 0 4px;font-size:16px}
+#rpt-box .rpt-sub{margin:0 0 12px;font-size:12px;color:var(--muted)}
+#rpt-box textarea{width:100%;min-height:90px;font:inherit;font-size:14px;color:var(--ink);
+  background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px;resize:vertical;box-sizing:border-box}
+#rpt-box .rpt-ctx{margin:10px 0 0;font-size:11px;color:var(--muted);line-height:1.5;
+  background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;white-space:pre-wrap;max-height:120px;overflow:auto}
+#rpt-box .rpt-row{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
+#rpt-box button{font:inherit;font-size:13px;border-radius:8px;padding:7px 14px;cursor:pointer;border:1px solid var(--line)}
+#rpt-send{background:var(--ink);color:var(--bg)}
+#rpt-cancel{background:var(--card);color:var(--ink)}
+</style>
+<button id="rpt-btn" title="Report an issue on this page">⚑ report an issue</button>
+<div id="rpt-ov"><div id="rpt-box">
+  <h3>Report an issue</h3>
+  <p class="rpt-sub">Noticed a wrong meaning, kāraka role, or bhāṣya marking? Tell us — this opens your mail app.</p>
+  <textarea id="rpt-txt" placeholder="What looks wrong? (e.g. the kāraka role on a word, a wrong meaning, a mis-coloured bhāṣya span…)"></textarea>
+  <div class="rpt-ctx" id="rpt-ctx"></div>
+  <div class="rpt-row"><button id="rpt-cancel">Cancel</button><button id="rpt-send">Send email</button></div>
+</div></div>
+<script>(function(){
+  var EMAIL="narayanamurthy.sharma@gmail.com";
+  function ua(){try{
+    var u=navigator.userAgent||'';
+    var os=/Android/i.test(u)?'Android':/iPhone|iPod/i.test(u)?'iOS':/iPad/i.test(u)?'iPadOS':/Windows/i.test(u)?'Windows':/Mac OS X|Macintosh/i.test(u)?'macOS':/CrOS/i.test(u)?'ChromeOS':/Linux/i.test(u)?'Linux':'unknown OS';
+    var dev=/iPad|Tablet/i.test(u)?'tablet':/Mobi|Android|iPhone|iPod/i.test(u)?'phone':'desktop/laptop';
+    var br=/Edg\//.test(u)?'Edge':/OPR\//.test(u)?'Opera':/Chrome\//.test(u)?'Chrome':/Firefox\//.test(u)?'Firefox':/Version\/.*Safari/.test(u)?'Safari':'unknown browser';
+    return {line:dev+' · '+os+' · '+br+' · viewport '+(window.innerWidth||0)+'×'+(window.innerHeight||0),raw:u};
+  }catch(e){return {line:'(device unavailable)',raw:''};}}
+  function mode(){var p=(location.pathname||'').toLowerCase();
+    return (/-mula|reading-(vc|pd|ab)([.-]|$)/.test(p))?'mūla (padārtha)':'bhāṣya (manana)';}
+  function curVerse(){try{
+    var els=document.querySelectorAll('[id^="v-"]');var best=null,bestTop=-1e9;
+    for(var i=0;i<els.length;i++){var t=els[i].getBoundingClientRect().top;
+      if(t<=120&&t>bestTop){bestTop=t;best=els[i];}}
+    if(!best&&els.length)best=els[0];
+    return best?best.id.replace(/^v-/,''):'(n/a)';
+  }catch(e){return '(n/a)';}}
+  function ctxBlock(){var d=ua();var ctrl=(navigator.serviceWorker&&navigator.serviceWorker.controller)?'sw-controlled':'no-controller';
+    return 'page: '+(location.pathname.split('/').pop()||location.pathname)+'\n'
+      +'text: '+(document.title||'')+'\n'
+      +'mode: '+mode()+'\n'
+      +'verse in view: '+curVerse()+'\n'
+      +'url: '+location.href+'\n'
+      +'device: '+d.line+'\n'
+      +'sw: '+ctrl+'\n'
+      +'user-agent: '+d.raw;}
+  var btn=document.getElementById('rpt-btn'),ov=document.getElementById('rpt-ov'),
+      txt=document.getElementById('rpt-txt'),ctx=document.getElementById('rpt-ctx');
+  if(!btn||!ov)return;
+  function open(){ctx.textContent=ctxBlock();ov.classList.add('on');txt.focus();}
+  function close(){ov.classList.remove('on');}
+  btn.addEventListener('click',open);
+  document.getElementById('rpt-cancel').addEventListener('click',close);
+  ov.addEventListener('click',function(e){if(e.target===ov)close();});
+  document.getElementById('rpt-send').addEventListener('click',function(){
+    var body=(txt.value.trim()||'(no description)')+'\n\n--- context (auto-captured) ---\n'+ctxBlock();
+    var subj='Issue: '+(document.title||'reading')+' — '+curVerse()+' ('+mode()+')';
+    location.href='mailto:'+EMAIL+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+    close();
+  });
+})();</script><script>window.VVSYNC={slug:"RMD"};</script><script src="sync.js" defer></script><script src="translit.js"></script></body></html>
