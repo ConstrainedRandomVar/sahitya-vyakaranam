@@ -3,8 +3,8 @@
 // entry point) is network-first so a deploy's new hashed URLs are picked up; hashed assets are
 // immutable so they're served from cache instantly (fast, incl. the big walk-data files). No manual
 // CACHE_NAME bump: this name is derived from the asset set and old caches are dropped on activate.
-const CACHE_NAME = 'sahitya-709e23ae66';
-const ASSETS = ["app.de5eb62881.js","axis-manifest.5b29286de9.js","flagged-wrong.b771d3697a.js","pratipadika_endings.8fcd363513.js","quiz-items.5ba173a31f.js","reading-nav.1d8a42d71b.js","samasa-peel.a8f1f18f36.js","site-config.c490c1f550.js","tutorial-data-ramodanta.bf84bed4f0.js","tutorial-manifest.9c34ae5a9b.js","walk-data-RMD-1.86f2526a61.js","walk-data-RMD-2.8c52b690f8.js","walk-data-RMD-3.ab3ea63714.js","walk-data-RMD-4.7290399286.js","walk-data-RMD-5.3fccbe52a0.js","walk-data-RMD-6.e55ce15814.js","walk-data-RMD-7.425a91af57.js","walk-manifest.84848bf1e4.js"];
+const CACHE_NAME = 'sahitya-78a07d29ef';
+const ASSETS = ["anvaya-manifest.a161c656a7.js","anvaya_check.026bcdf19c.js","app.b942249e7e.js","axis-manifest.5b29286de9.js","flagged-wrong.b771d3697a.js","pratipadika_endings.8fcd363513.js","quiz-items.5ba173a31f.js","reading-nav.1d8a42d71b.js","samasa-peel.a8f1f18f36.js","site-config.c490c1f550.js","tutorial-data-ramodanta.bf84bed4f0.js","tutorial-manifest.9c34ae5a9b.js","walk-data-RMD-1.86f2526a61.js","walk-data-RMD-2.8c52b690f8.js","walk-data-RMD-3.ab3ea63714.js","walk-data-RMD-4.7290399286.js","walk-data-RMD-5.3fccbe52a0.js","walk-data-RMD-6.e55ce15814.js","walk-data-RMD-7.425a91af57.js","walk-manifest.84848bf1e4.js"];
 const HASHED = /\.[0-9a-f]{10}\.(js|json|css)$/;   // immutable content-hashed filenames
 const SHELL = ['./', './index.html', './translit.js', './sync.js', './NotoSansSiddham.woff2', './scratchpad.html', './docx-import.js', './scratchpad-sync.js'];
 

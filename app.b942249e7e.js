@@ -1376,11 +1376,12 @@ function renderDashboard() {
   app.innerHTML = `
     <div class="dash-head"><div>${masteredN} / ${CODES.length} nodes mastered</div></div>
     <div class="dash-lane">
-      <div class="lane-label">🧠 अभ्यास-मार्गाः · Three ways to study</div>
+      <div class="lane-label">🧠 अभ्यास-मार्गाः · ${(window.ANVAYA_MANIFEST || []).length ? 'Four' : 'Three'} ways to study</div>
       <div class="readgrid modegrid">
         <a class="rcard modecard" id="readBtn"><div class="rtitle">📖 Read a verse</div><div class="modetag">know each word</div><div class="modedesc">Walk each word — recall its vibhakti (case·vacana·liṅga), kāraka role, meaning, sandhi &amp; samāsa. Feeds the Drill pool.</div></a>
         <a class="rcard modecard" id="tutorialBtn"><div class="rtitle">🧩 वाक्य-विग्रह</div><div class="modetag">parse the sentence</div><div class="modedesc">How the words relate across the whole sentence — kāraka, qualifier-of, coordination, clauses, uddeśya–vidheya, samāsa vigraha.</div></a>
         <a class="rcard modecard" id="clauseBtn"><div class="rtitle">🪢 वाक्य-विभाग</div><div class="modetag">carve the clauses</div><div class="modedesc">Split the verse into clauses (वाक्य): find each clause-head, group its words, then supply the अध्याहार — the unstated कर्ता and any implied verb. The step before वाक्य-विग्रह.</div></a>
+        ${(window.ANVAYA_MANIFEST || []).length ? `<a class="rcard modecard" id="anvayaBtn"><div class="rtitle">🔀 अन्वय</div><div class="modetag">put it in prose order</div><div class="modedesc">Rebuild the verse as a sentence: find the verb, then ask कः? किम्? केन? — each answer takes its place in the अन्वयः. Or order the words freely and check.</div></a>` : ''}
       </div>
     </div>
     <div class="dash-lane">
@@ -1428,6 +1429,7 @@ function renderDashboard() {
   document.getElementById('readBtn').onclick = () => { view = { screen: 'picker' }; renderReadingPicker(); };
   document.getElementById('tutorialBtn').onclick = () => { tutorialMode = 'vigraha'; view = { screen: 'tutorialPicker' }; renderTutorialPicker(); };
   { const cb = document.getElementById('clauseBtn'); if (cb) cb.onclick = () => { tutorialMode = 'clause'; view = { screen: 'tutorialPicker' }; renderTutorialPicker(); }; }
+  { const ab = document.getElementById('anvayaBtn'); if (ab) ab.onclick = () => { tutorialMode = 'anvaya'; view = { screen: 'tutorialPicker' }; renderTutorialPicker(); }; }
   app.querySelectorAll('[data-reflect]').forEach(b => b.onclick = () => { location.href = b.dataset.reflect; });
   app.querySelectorAll('.card').forEach(el => el.onclick = () => onNodeCardClick(el.dataset.code));
 }
@@ -4184,7 +4186,7 @@ function buildTutorialReportDetails(target) {
     '',
     deviceInfoLine(),
   ].filter(x => x !== null).join('\n');
-  const subject = `वाक्य-विग्रह issue: ${verse.slug || ''} ${verse.ref} — ${step.type}`;
+  const subject = `${String(step.type || '').startsWith('anv') ? 'अन्वय' : 'वाक्य-विग्रह'} issue: ${verse.slug || ''} ${verse.ref} — ${step.type}`;
   return { subject, details };
 }
 // GitHub-issue fallback (Harsha, 2026-08-16: "there doesn't appear to be a way to file a ticket
@@ -4213,6 +4215,8 @@ async function submitTutorialReport(target, name, email, userComment) {
   } catch (e) { return false; }
 }
 function tutorialReportTarget(sentence, step, verse) {
+  if (String(step.type || '').startsWith('anv'))   // अन्वय steps: expected = the unit's words
+    return { verse, sentence, step, expectedWords: (step.expected || []).map(i => sentence.words[i]), selectedWords: [...(view.selectedIndices || [])].map(i => sentence.words[i]), pct: null };
   const c = step.clusterIdx != null ? sentence.clusters[step.clusterIdx] : null;
   // New samāsa/clause MCQ steps carry no cluster/selectedIndices — capture the actual pick + correct
   // + the (HTML-stripped) question so a report isn't content-free (review finding, 2026-08-20).
@@ -4399,6 +4403,7 @@ function startTutorialSentence() {
   renderTutorial();
 }
 function startTutorialVerse(verseIdx) {
+  if (tutorialMode === 'anvaya') return startAnvayaVerse(verseIdx);
   tutorialVerseIdx = verseIdx;
   tutorialSentIdx = 0;
   saveTutorialProgress({ lastRef: tutorialVerses[verseIdx].ref });
@@ -4412,7 +4417,8 @@ function startTutorialVerse(verseIdx) {
 // it lands on step 0 and reports that — itself a useful confirmation. Sentence 0 only.
 function jumpToTutorial(ref, stepType, clusterIdx, slug, mode) {
   slug = slug || 'Gita';
-  tutorialMode = (mode === 'clause') ? 'clause' : 'vigraha';   // deep-link ?mode=clause selects वाक्य-विभाग
+  tutorialMode = (mode === 'clause') ? 'clause' : (mode === 'anvaya') ? 'anvaya' : 'vigraha';   // ?mode=clause → वाक्य-विभाग, ?mode=anvaya → अन्वय
+  if (tutorialMode === 'anvaya') anvayaSlug = slug;
   ensureTutorialDataLoaded(slug).then(() => {
     tutorialVerses = window.TUTORIAL_DATA[slug].verses;
     const idx = tutorialVerses.findIndex(v => v.ref === ref || formatVerseRef(v.ref) === ref || formatVerseRef(v.ref) === formatVerseRef(ref));
@@ -4891,12 +4897,200 @@ function groupTutorialVersesByChapter(verses, depth) {
 // texts with NO gold clause decomposition (their kāraka came from the UoHyd e-reader, not Gemini) —
 // वाक्य-विभाग (clause mode) can't run on them, so they're filtered out of that picker. BG only, today.
 const CLAUSE_MODE_EXCLUDE = new Set(['Gita']);
+
+// ===================================================================================================
+// अन्वय tutorial (tutorialMode 'anvaya') — rebuild the verse in prose order (ANVAYA-V2-PROPOSAL; 2026-10-03).
+// Data: anvaya-data-<slug>.js (build_anvaya_data.js) — per sentence {n, model, units, constraints, uncertain}; grading
+// of the free mode by app/anvaya_check.js (structural constraints, never one fixed order). GUIDED mode: step 1 finds
+// the verb(s); then each unit in model order is asked with its ākāṅkṣā question (कः? किम्? केन? …) and appended to the
+// growing anvaya line; particles and the verb are placed automatically; adhyāhāra is an MCQ (copula optional). FREE
+// mode: tap the words in prose order, then Check. Verses whose tree is unreliable (uncertain) are practice-only.
+// ===================================================================================================
+const ANVAYA_KEY = 'vvAnvayaProgress', ANVAYA_DONE_KEY = 'vvAnvayaCompleted';
+let anvayaSlug = null, anvayaSteps = [], anvayaStepIdx = 0, anvayaLine = [], anvayaScores = [], anvayaFree = false, anvayaOrder = [];
+const ANVAYA_Q = {
+  karta: ['कः / का / किम्?', 'Who or what does “{v}”?'], karma: ['किम् / कम्?', 'What is the object of “{v}”?'],
+  karana: ['केन?', 'By what means?'], sampradana: ['कस्मै?', 'For whom / to whom?'], apadana: ['कस्मात्?', 'From what / from where?'],
+  adhikarana: ['कुत्र / कदा?', 'Where, or when?'], satisaptami: ['कस्मिन् सति?', 'Under what circumstance?'], hetu: ['कस्मात्? किमर्थम्?', 'For what reason?'],
+  nirdharana: ['केषु?', 'Singled out from which group?'], sambodhana: ['सम्बोधनम्', 'Who is being addressed?'], itthambhuta: ['कथम्?', 'Marked by what?'],
+  upamana: ['उपमानम्', 'Compared with what?'], upameya: ['उपमेयम्', 'What is being compared?'],
+  agreementKarta: ['विधेयम्', 'What is said about the subject (the predicate)?'], agreementKarma: ['विधेयम्', 'What is said about the object?'],
+  modifiers: ['कथम्?', 'How — in what manner?'], remaining: ['कथम्? कदा?', 'How, when — the adverb(s)?'],
+  samuccayaKarta: ['कः च?', 'Who else (joined by च / वा)?'], samuccayaKarma: ['किम् च?', 'What else (joined by च / वा)?'],
+  nominalHead: ['उद्देश्यम्', 'What is the subject of this statement?'],
+  Q: ['विशेषणम्', 'Which word(s) go together here?'], G: ['षष्ठी', 'Whose? — the genitive'],
+};
+function loadAnvayaProgress() { try { return JSON.parse(localStorage.getItem(ANVAYA_KEY)) || {}; } catch (e) { return {}; } }
+function ensureAnvayaDataLoaded(slug) {
+  if (window.ANVAYA_DATA && window.ANVAYA_DATA[slug]) return Promise.resolve();
+  const entry = (window.ANVAYA_MANIFEST || []).find(m => m.slug === slug);
+  if (!entry) return Promise.reject(new Error('no anvaya data for ' + slug));
+  ensureAnvayaDataLoaded._p = ensureAnvayaDataLoaded._p || {};
+  if (!ensureAnvayaDataLoaded._p[slug]) ensureAnvayaDataLoaded._p[slug] = new Promise((resolve, reject) => {
+    const s = document.createElement('script'); s.src = entry.file; s.onload = () => resolve(); s.onerror = () => reject(new Error('failed to load ' + entry.file));
+    document.head.appendChild(s);
+  });
+  return ensureAnvayaDataLoaded._p[slug];
+}
+// Pure step builder (also exercised by vc-karaka/assert_anvaya_tutorial.js). Asked steps carry `before`: the automatic
+// units (particles, verbs already found, nothing else) that precede them in model order and are appended first.
+function buildAnvayaSteps(d) {
+  const steps = [];
+  const verbs = d.units.filter(u => u.kind === 'verb').flatMap(u => u.w);
+  if (verbs.length) steps.push({ type: 'anvVerbs', expected: verbs });
+  let pending = [];
+  for (const u of d.units) {
+    if (u.kind === 'particle' || u.kind === 'verb') { pending.push(u); continue; }
+    if (u.kind === 'supply') {   // ask the FIRST copula of a verse (it is optional — no need to drill it 8×); verbs/pronouns always
+      if (u.supplyKind === 'copula' && steps.some(st => st.type === 'anvSupply' && st.unit.supplyKind === 'copula')) { pending.push(u); continue; }
+      steps.push({ type: 'anvSupply', unit: u, before: pending }); pending = []; continue; }
+    steps.push({ type: 'anvUnit', unit: u, expected: u.w.slice(), before: pending }); pending = [];
+  }
+  steps.push({ type: 'anvDone', before: pending });
+  return steps;
+}
+function anvayaData() {
+  const verse = tutorialVerses[tutorialVerseIdx];
+  const slug = anvayaSlug;
+  const sents = (((window.ANVAYA_DATA || {})[slug] || {}).verses || {})[verse.ref] || [];
+  return sents[tutorialSentIdx] || null;
+}
+function startAnvayaVerse(verseIdx) {
+  tutorialVerseIdx = verseIdx; tutorialSentIdx = 0;
+  const slug = anvayaSlug;
+  localStorage.setItem(ANVAYA_KEY, JSON.stringify({ lastRef: tutorialVerses[verseIdx].ref }));
+  ensureAnvayaDataLoaded(slug).then(() => startAnvayaSentence(slug)).catch(e => { alert(e.message); view = { screen: 'dashboard' }; renderDashboard(); });
+}
+function startAnvayaSentence(slug) {
+  view = { screen: 'anvaya', selectedIndices: new Set(), checked: false };
+  const d = anvayaData();
+  if (!d) { alert('No anvaya for this verse'); renderTutorialPicker(); return; }
+  anvayaSteps = buildAnvayaSteps(d); anvayaStepIdx = 0; anvayaLine = []; anvayaScores = []; anvayaOrder = [];
+  renderAnvaya();
+}
+function anvayaTok(t, sentence) { return typeof t === 'number' ? `<span class="anv-w">${esc(sentence.words[t])}</span>` : `<span class="anv-sup">[${esc(t.s)}]</span>`; }
+function anvayaAppend(units) { for (const u of units || []) { if (u.kind === 'supply') { anvayaLine.push({ s: u.text }); continue; } for (const i of u.w) if (!anvayaLine.includes(i)) anvayaLine.push(i); } }
+function anvayaLineHas(i) { return anvayaLine.includes(i); }
+function anvayaQuestion(step, sentence) {
+  const u = step.unit, v = u.verb != null ? sentence.words[u.verb] : '';
+  if (u.kind === 'lead') return ['आरम्भः', 'Which word opens this clause? (a यथा / यत् / यदा …, its तथा / तत् / तदा, or अथ / ततः …)'];
+  if (u.kind === 'kr') return ['पूर्वकालः', `The participle/absolutive phrase: click “${esc(sentence.words[u.w[u.w.length - 1]])}” and the words that belong to it`];
+  if (u.kind === 'quote') return ['उद्धरणम्', 'The quoted words, ending with इति'];
+  const q = ANVAYA_Q[u.role] || ['', 'Which word(s) come next?'];
+  return [q[0], q[1].replace('{v}', esc(v))];
+}
+function renderAnvaya() {
+  const sentence = currentTutorialSentence(), verse = tutorialVerses[tutorialVerseIdx], d = anvayaData();
+  const step = anvayaSteps[anvayaStepIdx], words = sentence.words;
+  const placed = new Set(anvayaFree ? anvayaOrder : anvayaLine.filter(t => typeof t === 'number'));
+  const modeBar = `<div class="anv-modes"><button class="${anvayaFree ? 'secondary' : 'primary'}" id="anvGuided">Guided</button><button class="${anvayaFree ? 'primary' : 'secondary'}" id="anvFree">Free</button></div>`;
+  const practice = d.uncertain ? `<div class="tut-explain">Practice only — the analysis behind this verse's model anvaya may be unreliable (machine-generated). Not graded.</div>` : '';
+  const head = `<div class="tutorial-head"><button class="link" id="tutBackBtn">← Dashboard</button><span>🔀 अन्वय · ${esc(formatVerseRef(verse.ref))}</span></div>`;
+  let body = '';
+  if (anvayaFree) {
+    const res = view.checked ? AnvayaCheck.check(anvayaOrder, d) : null;
+    const modelOrder = d.model.filter(t => typeof t === 'number');
+    const same = res && res.ok && modelOrder.join() === anvayaOrder.join();
+    body = `
+      <div class="tut-step-label">Tap the words in prose order (अन्वयः). Tap a placed word to take it back.</div>
+      <div class="anv-bank">${words.map((w, i) => placed.has(i) ? '' : `<span class="tutword anv-chip" data-i="${i}">${esc(w)}</span>`).join(' ')}</div>
+      <div class="anv-line">${anvayaOrder.map(i => `<span class="tutword anv-placed" data-i="${i}">${esc(words[i])}</span>`).join(' ') || '<span class="muted">…</span>'}</div>
+      ${res ? (res.ok ? `<div class="tut-explain">✓ A correct anvaya${same ? ' — identical to the model.' : '. The model reads:'}</div>${same ? '' : `<div class="anv-line anv-model">${d.model.map(t => anvayaTok(t, sentence)).join(' ')}</div>`}`
+        : `<div class="tut-explain">Not yet — ${res.violations.slice(0, 4).map(v => esc(v.why)).join('; ')}</div>`) : ''}
+      <div class="tutorial-actions">
+        <button class="primary" id="anvCheck" ${anvayaOrder.length === words.length && !view.checked ? '' : 'disabled'}>Check</button>
+        <button class="secondary" id="anvReset">Reset</button>
+        <button class="secondary" id="anvShow">Show model</button>
+        ${view.checked ? '<button class="primary" id="anvNextVerse">Next verse →</button>' : ''}
+      </div>`;
+  } else if (step.type === 'anvDone') {
+    if (!view.anvDoneAppended) { anvayaAppend(step.before); view.anvDoneAppended = true; }
+    const avg = anvayaScores.length ? anvayaScores.reduce((a, b) => a + b, 0) / anvayaScores.length : 1;
+    body = `<div class="tut-step-label">अन्वयः — the whole verse in prose order</div>
+      <div class="anv-line anv-model">${d.model.map(t => anvayaTok(t, sentence)).join(' ')}</div>
+      <div class="tut-explain">Other orders are also correct when they keep each phrase together, put qualifiers before their noun, the verb at the end of its clause, and a यथा / यत् clause before its तथा / तत् clause. Try the Free mode to test your own.</div>
+      <div class="tutorial-actions"><button class="primary" id="anvFinish">Finish (${Math.round(avg * 100)}%)</button></div>`;
+  } else {
+    // the line shows the PLACED tokens in MODEL order (a unit appended as a block could otherwise interleave wrongly)
+    const supUsed = {}, supHave = {}; anvayaLine.forEach(t => { if (typeof t !== 'number') supHave[t.s] = (supHave[t.s] || 0) + 1; });
+    const line = d.model.filter(t => typeof t === 'number' ? anvayaLine.includes(t) : ((supUsed[t.s] = (supUsed[t.s] || 0) + 1) <= (supHave[t.s] || 0)))
+      .map(t => anvayaTok(t, sentence)).join(' ');
+    const parked = step.type === 'anvVerbs' ? '' : anvayaSteps[0].type === 'anvVerbs' ? anvayaSteps[0].expected.filter(i => !anvayaLineHas(i)).map(i => `<span class="anv-park">${esc(words[i])}</span>`).join(' ') : '';
+    let prompt, ctrl = '';
+    if (step.type === 'anvVerbs') prompt = ['क्रिया', 'Find the main verb(s) — the finite verb of each clause. They will close their clauses.'];
+    else if (step.type === 'anvSupply') {
+      prompt = ['अध्याहारः', 'Is a word unstated here? Supply it.'];
+      const u = step.unit, opts = [...u.options, '— nothing —'];
+      const ok = o => o === u.text || (u.acceptNone && o === '— nothing —');
+      ctrl = `<div class="options">${opts.map(o => `<button class="opt ${view.checked ? (ok(o) ? 'correct' : (o === view.anvPicked ? 'wrong' : '')) : ''}" data-o="${esc(o)}" ${view.checked ? 'disabled' : ''}>${esc(o)}</button>`).join('')}</div>
+        ${view.checked ? `<div class="tut-explain">${u.supplyKind === 'copula' ? `The copula [${esc(u.text)}] is understood; supplying it is optional.` : u.supplyKind === 'pronoun' ? `The verb's person requires [${esc(u.text)}] as the unstated kartā.` : `[${esc(u.text)}] — the verb is carried over from the other clause.`}</div>` : ''}`;
+    } else prompt = anvayaQuestion(step, sentence);
+    const clickable = step.type !== 'anvSupply';
+    const exp = new Set(step.expected || []);
+    body = `
+      <div class="tutorial-verse prompt">${clickable ? renderClickableVerse(words, { selected: view.selectedIndices, disabled: view.checked, expected: view.checked ? exp : null }) : esc(words.join(' '))}</div>
+      <div class="anv-line">${line || '<span class="muted">अन्वयः …</span>'} ${parked ? `<span class="anv-gap">…</span> ${parked}` : ''}</div>
+      <div class="tut-step-label"><b>${esc(prompt[0])}</b> ${prompt[1]}</div>
+      ${ctrl}
+      <div class="tutorial-actions">${clickable && !view.checked ? '<button class="primary" id="anvCheckStep">Check</button>' : ''}${view.checked ? '<button class="primary" id="anvNext">Next →</button>' : ''}</div>`;
+  }
+  app.innerHTML = `${head}<div class="question">${modeBar}${practice}${body}${renderTutorialReportArea(sentence, step || {}, verse)}</div>`;
+  document.getElementById('tutBackBtn').onclick = () => { view = { screen: 'dashboard' }; renderDashboard(); };
+  document.getElementById('anvGuided').onclick = () => { anvayaFree = false; startAnvayaSentence(anvayaSlug); };
+  document.getElementById('anvFree').onclick = () => { anvayaFree = true; anvayaOrder = []; view = { ...view, checked: false }; renderAnvaya(); };
+  wireTutorialReportArea(sentence, step || {}, verse, renderAnvaya);
+  if (anvayaFree) {
+    app.querySelectorAll('.anv-chip').forEach(el => el.onclick = () => { if (view.checked) return; anvayaOrder.push(+el.dataset.i); renderAnvaya(); });
+    app.querySelectorAll('.anv-placed').forEach(el => el.onclick = () => { if (view.checked) return; anvayaOrder = anvayaOrder.filter(i => i !== +el.dataset.i); renderAnvaya(); });
+    const c = document.getElementById('anvCheck'); if (c) c.onclick = () => { const r = AnvayaCheck.check(anvayaOrder, d); if (!d.uncertain) anvayaScores.push(r.ok ? 1 : 0); view = { ...view, checked: true }; renderAnvaya(); };
+    document.getElementById('anvReset').onclick = () => { anvayaOrder = []; view = { ...view, checked: false }; renderAnvaya(); };
+    document.getElementById('anvShow').onclick = () => { anvayaOrder = d.model.filter(t => typeof t === 'number'); view = { ...view, checked: true }; renderAnvaya(); };
+    const nv = document.getElementById('anvNextVerse'); if (nv) nv.onclick = () => anvayaFinish();
+    return;
+  }
+  if (step.type === 'anvDone') { document.getElementById('anvFinish').onclick = () => anvayaFinish(); return; }
+  if (step.type === 'anvSupply') {
+    if (!view.checked) app.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+      const u = step.unit, o = b.dataset.o, ok = o === u.text || (u.acceptNone && o === '— nothing —');
+      if (!d.uncertain) anvayaScores.push(ok ? 1 : 0);
+      view = { ...view, checked: true, anvPicked: o }; renderAnvaya();
+    });
+  } else if (!view.checked) {
+    app.querySelectorAll('.tutword').forEach(el => el.onclick = () => {
+      const i = +el.dataset.i, sel = new Set(view.selectedIndices);
+      if (sel.has(i)) sel.delete(i); else sel.add(i);
+      view = { ...view, selectedIndices: sel }; renderAnvaya();
+    });
+    document.getElementById('anvCheckStep').onclick = () => {
+      if (!d.uncertain) anvayaScores.push(tutorialStepScore(view.selectedIndices, new Set(step.expected), false));
+      view = { ...view, checked: true }; renderAnvaya();
+    };
+  }
+  const nx = document.getElementById('anvNext');
+  if (nx) nx.onclick = () => {
+    if (step.type !== 'anvVerbs') { anvayaAppend(step.before); if (step.unit && step.unit.kind !== 'supply') anvayaAppend([step.unit]); }
+    if (step.type === 'anvSupply' && view.anvPicked !== '— nothing —') anvayaLine.push({ s: step.unit.text });
+    anvayaStepIdx++; view = { ...view, selectedIndices: new Set(), checked: false, anvPicked: null }; renderAnvaya();
+  };
+}
+function anvayaFinish() {
+  const verse = tutorialVerses[tutorialVerseIdx];
+  const avg = anvayaScores.length ? anvayaScores.reduce((a, b) => a + b, 0) / anvayaScores.length : 1;
+  if (anvayaScores.length) {
+    let done = {}; try { done = JSON.parse(localStorage.getItem(ANVAYA_DONE_KEY)) || {}; } catch (e) {}
+    done[verse.ref] = { completedAt: Date.now(), correctSteps: Math.round(avg * anvayaScores.length * 100) / 100, totalSteps: anvayaScores.length };
+    localStorage.setItem(ANVAYA_DONE_KEY, JSON.stringify(done));
+  }
+  renderTutorialVerseComplete(avg);
+}
+
 function renderTutorialPicker() {
-  const clauseMode = tutorialMode === 'clause';
-  const modeTitle = clauseMode ? '🪢 वाक्य-विभाग' : '🧩 वाक्य-विग्रह';
+  const clauseMode = tutorialMode === 'clause', anvMode = tutorialMode === 'anvaya';
+  const modeTitle = anvMode ? '🔀 अन्वय' : clauseMode ? '🪢 वाक्य-विभाग' : '🧩 वाक्य-विग्रह';
+  const anvSlugs = new Set((window.ANVAYA_MANIFEST || []).map(m => m.slug));
   // texts listed lexicographically (by romanized slug) in वाक्य-विग्रह + वाक्य-विभाग pickers — independent
   // of the build-emitted manifest order (Harsha, 2026-08-28).
-  const manifest = (window.TUTORIAL_MANIFEST || []).filter(m => !clauseMode || !CLAUSE_MODE_EXCLUDE.has(m.slug))
+  const manifest = (window.TUTORIAL_MANIFEST || []).filter(m => anvMode ? anvSlugs.has(m.slug) : (!clauseMode || !CLAUSE_MODE_EXCLUDE.has(m.slug)))
     .slice().sort((a, b) => a.slug.toLowerCase().localeCompare(b.slug.toLowerCase()));
   // Text is now a real level (mirrors renderReadingPicker) — the manifest carries every pre-built
   // tutorial text (Gita, vivekacudamani, …). Default to the first entry; remember the choice in
@@ -4910,9 +5104,10 @@ function renderTutorialPicker() {
   if (!slug) { app.innerHTML = `<p>No tutorial texts available. <button class="link" id="tutPickerBackBtn2">← Dashboard</button></p>`; document.getElementById('tutPickerBackBtn2').onclick = () => { view = { screen: 'dashboard' }; renderDashboard(); }; return; }
   ensureTutorialDataLoaded(slug).then(() => {
     tutorialVerses = window.TUTORIAL_DATA[slug].verses;
-    const completion = loadTutorialCompletion();
+    if (anvMode) anvayaSlug = slug;
+    const completion = anvMode ? (() => { try { return JSON.parse(localStorage.getItem(ANVAYA_DONE_KEY)) || {}; } catch (e) { return {}; } })() : loadTutorialCompletion();
     const completedN = Object.keys(completion).filter(ref => tutorialVerses.some(v => v.ref === ref)).length;
-    const saved = loadTutorialProgress();
+    const saved = anvMode ? loadAnvayaProgress() : loadTutorialProgress();
     const resumeIdx = saved.lastRef ? tutorialVerses.findIndex(v => v.ref === saved.lastRef) : -1;
     // Some texts (e.g. vivekacūḍāmaṇi) have FLAT verse refs ("1".."44"), not "chapter.verse" — those
     // have no chapter level, so skip the Chapter dropdown and offer a single verse dropdown 1..N.
@@ -4930,7 +5125,7 @@ function renderTutorialPicker() {
         <h2>${modeTitle} — ${esc(textTitle)}</h2>
         <button class="link" id="tutPickerBackBtn">← Dashboard</button>
       </div>
-      <p class="picker-sub muted">${clauseMode ? 'Clause decomposition: find each clause-head · group its words · supply the अध्याहार (unstated कर्ता / implied verb)' : 'Full-verse analysis: कारक (syntactic roles) · समास-विच्छेद (compound peeling) · वाक्य-भेद (clause structure)'}</p>
+      <p class="picker-sub muted">${anvMode ? 'Prose order (अन्वयः): find the verb, then build the sentence phrase by phrase — कः? किम्? केन? … · or order it freely and check' : clauseMode ? 'Clause decomposition: find each clause-head · group its words · supply the अध्याहार (unstated कर्ता / implied verb)' : 'Full-verse analysis: कारक (syntactic roles) · समास-विच्छेद (compound peeling) · वाक्य-भेद (clause structure)'}</p>
       <div class="picker-level">
         <label>Text</label>
         <select id="tutTextSelect">

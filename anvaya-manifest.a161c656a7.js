@@ -1,0 +1,1 @@
+window.ANVAYA_MANIFEST=[];
