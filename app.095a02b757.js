@@ -95,7 +95,7 @@ const AUTO_ADVANCE_DELAY_WRONG = 1100;
 const AUTO_ADVANCE_KEY = 'vyakarana_auto_advance';
 function autoAdvanceOn() { return localStorage.getItem(AUTO_ADVANCE_KEY) !== '0'; }
 function setAutoAdvance(on) { localStorage.setItem(AUTO_ADVANCE_KEY, on ? '1' : '0'); }
-// ---- Settings (⚙ gear): auto-advance + reading-page script. The script pref (vv_script) is only SET
+// ---- Settings (⚙ gear): auto-advance + reading-page script + quiet hover. The script pref (vv_script) is only SET
 // here; it's READ + applied by the reading pages' translit.js (the quiz itself is never transliterated).
 // Shared localStorage key, so the gear default and the reading-page picker stay in sync. ----
 const SCRIPT_KEY = 'vv_script';
@@ -103,6 +103,12 @@ const SCRIPT_OPTS = [['dev', 'देवनागरी'], ['iast', 'IAST'], ['ka
 function readingScript() { const v = localStorage.getItem(SCRIPT_KEY); return ['iast', 'kannada', 'tamil'].includes(v) ? v : 'dev'; }
 function reflectScriptSel() { const el = document.getElementById('setScrSel'); if (el) el.value = readingScript(); }
 function setReadingScript(s) { localStorage.setItem(SCRIPT_KEY, s); reflectScriptSel(); }
+// Quiet hover (reading pages): word cards appear only while Cmd/Ctrl or Alt is held — for instructors who
+// screen-share (Zoom etc.) without our sync feature. SET here; READ + applied by the reading pages' peek.js
+// (shared with the sync-scrolling presenter peek, so both use the same keys). Hover-capable devices only.
+const QUIET_HOVER_KEY = 'vv_quiet_hover';
+function quietHoverOn() { return localStorage.getItem(QUIET_HOVER_KEY) === '1'; }
+function setQuietHover(on) { localStorage.setItem(QUIET_HOVER_KEY, on ? '1' : '0'); }
 function openSettings() {
   let ov = document.getElementById('settings-ov');
   if (!ov) {
@@ -118,6 +124,11 @@ function openSettings() {
         <select id="setScrSel" class="set-select">${SCRIPT_OPTS.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}</select>
         <div class="set-hint">Applies to the “Read the texts” pages — shows the same Sanskrit in Devanāgarī, IAST, or another script (Kannada, Tamil, Telugu, Malayalam, Bengali, Gujarati, Cyrillic, Siddhaṃ, katakana). The quiz is unaffected.</div>
       </div>
+      <div class="set-row">
+        <div class="set-label">Word cards · reading pages</div>
+        <label class="set-check"><input type="checkbox" id="setQuietHover"> Quiet hover — show word cards only while holding <b>Cmd/Ctrl</b> (or <b>Alt</b>)</label>
+        <div class="set-hint">For screen-sharing (e.g. on Zoom): cards stop popping up as you move the mouse; hold the key to see one. The same keys reveal cards when presenting with shared reading. Phones and tablets are unaffected.</div>
+      </div>
       <div style="text-align:right"><button class="secondary" id="setClose">Done</button></div>
     </div>`;
     document.body.appendChild(ov);
@@ -126,8 +137,11 @@ function openSettings() {
     const chk = document.getElementById('setAutoAdv');
     chk.onchange = () => setAutoAdvance(chk.checked);
     document.getElementById('setScrSel').onchange = (e) => setReadingScript(e.target.value);
+    const qh = document.getElementById('setQuietHover');
+    qh.onchange = () => setQuietHover(qh.checked);
   }
   document.getElementById('setAutoAdv').checked = autoAdvanceOn();
+  document.getElementById('setQuietHover').checked = quietHoverOn();
   reflectScriptSel();
   ov.classList.add('on');
 }
@@ -1376,12 +1390,11 @@ function renderDashboard() {
   app.innerHTML = `
     <div class="dash-head"><div>${masteredN} / ${CODES.length} nodes mastered</div></div>
     <div class="dash-lane">
-      <div class="lane-label">🧠 अभ्यास-मार्गाः · ${(window.ANVAYA_MANIFEST || []).length ? 'Four' : 'Three'} ways to study</div>
+      <div class="lane-label">🧠 अभ्यास-मार्गाः · Three ways to study</div>
       <div class="readgrid modegrid">
         <a class="rcard modecard" id="readBtn"><div class="rtitle">📖 Read a verse</div><div class="modetag">know each word</div><div class="modedesc">Walk each word — recall its vibhakti (case·vacana·liṅga), kāraka role, meaning, sandhi &amp; samāsa. Feeds the Drill pool.</div></a>
         <a class="rcard modecard" id="tutorialBtn"><div class="rtitle">🧩 वाक्य-विग्रह</div><div class="modetag">parse the sentence</div><div class="modedesc">How the words relate across the whole sentence — kāraka, qualifier-of, coordination, clauses, uddeśya–vidheya, samāsa vigraha.</div></a>
         <a class="rcard modecard" id="clauseBtn"><div class="rtitle">🪢 वाक्य-विभाग</div><div class="modetag">carve the clauses</div><div class="modedesc">Split the verse into clauses (वाक्य): find each clause-head, group its words, then supply the अध्याहार — the unstated कर्ता and any implied verb. The step before वाक्य-विग्रह.</div></a>
-        ${(window.ANVAYA_MANIFEST || []).length ? `<a class="rcard modecard" id="anvayaBtn"><div class="rtitle">🔀 अन्वय</div><div class="modetag">put it in prose order</div><div class="modedesc">Rebuild the verse as a sentence: find the verb, then ask कः? किम्? केन? — each answer takes its place in the अन्वयः. Or order the words freely and check.</div></a>` : ''}
       </div>
     </div>
     <div class="dash-lane">
@@ -1415,7 +1428,11 @@ function renderDashboard() {
     <div class="grid">
       ${flatCodes.map(renderNodeCard).join('')}
     </div>
-    ${(window.SITE_CONFIG && window.SITE_CONFIG.hideTools) ? '' : `
+    ${(window.SITE_CONFIG && window.SITE_CONFIG.tools) ? /* sister site: its own tool cards (build_sahitya_site.js) */ `
+    <div class="dash-lane">
+      <div class="lane-label">🔎 उपकरणानि · Tools</div>
+      <div class="readgrid modegrid">${window.SITE_CONFIG.tools.map(t => `<a class="rcard modecard" href="${t.href}"><div class="rtitle">${t.title}</div><div class="modetag">${t.tag}</div><div class="modedesc">${t.desc}</div></a>`).join('')}</div>
+    </div>` : (window.SITE_CONFIG && window.SITE_CONFIG.hideTools) ? '' : `
     <div class="dash-lane">
       <div class="lane-label">🔎 उपकरणानि · Other tools</div>
       <div class="readgrid modegrid">
@@ -2159,6 +2176,8 @@ function renderQuiz() {
         : isCorrectIdx(picked)
         ? `correct! ${item.sutra ? '(' + esc(item.sutra) + ')' : ''}`
         : `not quite — correct answer highlighted. ${item.sutra ? '(' + esc(item.sutra) + ')' : ''}`) : ''}</div>
+    ${answered && item.entry && (item.kind === 'dhatu' || item.kind === 'krdanta') ? `<div class="tut-explain">धातुः ${esc(item.entry)}</div>` : ''}
+    ${answered && item.kind === 'karaka' && item.roleSpecific && item.roleSpecific !== item.role ? `<div class="tut-explain">${esc(item.word)}: ${esc(item.roleSpecific)}</div>` : ''}
     ${renderReportArea()}
     ${bottom}`;
   document.getElementById('backBtn').onclick = () => { clearTimeout(pendingAdvanceTimer); view = { screen: 'dashboard' }; renderDashboard(); };
@@ -4317,6 +4336,7 @@ function renderClickableVerse(words, opts) {
       else if (expected && expected.has(i)) cls.push('missed');
       else if (selected.has(i)) cls.push('wrong');
     } else if (selected.has(i)) cls.push('selected');
+    if (opts.wordClass) { const x = opts.wordClass(i); if (x) cls.push(x); }   // optional per-word class (अन्वय clause tint/anchor)
     const code = codes && codes[i] ? `<sub class="tutcode">${esc(codes[i])}</sub>` : '';
     return `<span class="${cls.join(' ')}" data-i="${i}">${esc(w)}${code}</span>`;
   };
@@ -4935,19 +4955,32 @@ function ensureAnvayaDataLoaded(slug) {
 // Pure step builder (also exercised by vc-karaka/assert_anvaya_tutorial.js). Asked steps carry `before`: the automatic
 // units (particles, verbs already found, nothing else) that precede them in model order and are appended first.
 function buildAnvayaSteps(d) {
+  // asked steps carry `before` (automatic units preceding the FIRST question) and `after` (automatic units that follow
+  // this step in model order — the verb, particles, later copulas — placed as soon as the step is answered, so e.g.
+  // न is immediately followed by its verb: … स्फुटं न वेत्ति)
   const steps = [];
   const verbs = d.units.filter(u => u.kind === 'verb').flatMap(u => u.w);
   if (verbs.length) steps.push({ type: 'anvVerbs', expected: verbs });
-  let pending = [];
+  if ((d.krtGov || []).length) steps.push({ type: 'anvKrt', expected: d.krtGov.slice() });   // the वाक्य-विग्रह lens: कृत् forms governing a कारक
+  let leading = [], last = null;
+  const auto = u => last ? last.after.push(u) : leading.push(u);
   for (const u of d.units) {
-    if (u.kind === 'particle' || u.kind === 'verb') { pending.push(u); continue; }
+    if (u.kind === 'particle' || u.kind === 'verb') { auto(u); continue; }
+    let st;
     if (u.kind === 'supply') {   // ask the FIRST copula of a verse (it is optional — no need to drill it 8×); verbs/pronouns always
-      if (u.supplyKind === 'copula' && steps.some(st => st.type === 'anvSupply' && st.unit.supplyKind === 'copula')) { pending.push(u); continue; }
-      steps.push({ type: 'anvSupply', unit: u, before: pending }); pending = []; continue; }
-    steps.push({ type: 'anvUnit', unit: u, expected: u.w.slice(), before: pending }); pending = [];
+      if ((u.supplyKind === 'copula' || u.supplyKind === 'carry') && steps.some(x => x.type === 'anvSupply' && x.unit.supplyKind === u.supplyKind)) { auto(u); continue; }
+      st = { type: 'anvSupply', unit: u, before: leading, after: [] };
+    } else st = { type: 'anvUnit', unit: u, expected: u.w.slice(), core: (u.core || u.w).slice(), before: leading, after: [] };
+    leading = []; steps.push(st); last = st;
   }
-  steps.push({ type: 'anvDone', before: pending });
+  steps.push({ type: 'anvDone', before: leading, after: [] });
   return steps;
+}
+function anvayaStepScore(selected, step) {
+  const core = new Set(step.core || step.expected || []), all = new Set(step.expected || []);
+  const sel = [...selected], wrong = sel.filter(i => !all.has(i)).length, hit = [...core].filter(i => selected.has(i)).length;
+  if (!core.size) return wrong ? 0 : 1;
+  return Math.max(0, hit / core.size - wrong / Math.max(core.size, sel.length));
 }
 function anvayaData() {
   const verse = tutorialVerses[tutorialVerseIdx];
@@ -4971,7 +5004,55 @@ function startAnvayaSentence(slug) {
 function anvayaTok(t, sentence) { return typeof t === 'number' ? `<span class="anv-w">${esc(sentence.words[t])}</span>` : `<span class="anv-sup">[${esc(t.s)}]</span>`; }
 function anvayaAppend(units) { for (const u of units || []) { if (u.kind === 'supply') { anvayaLine.push({ s: u.text }); continue; } for (const i of u.w) if (!anvayaLine.includes(i)) anvayaLine.push(i); } }
 function anvayaLineHas(i) { return anvayaLine.includes(i); }
+// interrogative pronoun declined to the answer's case/number/gender (traditional ākāṅkṣā question: केन न वेत्ति?)
+const KIM = {   // [vibhakti][gender] → [eka, dvi, bahu]
+  1: { m: ['कः','कौ','के'], f: ['का','के','काः'], n: ['किम्','के','कानि'] }, 2: { m: ['कम्','कौ','कान्'], f: ['काम्','के','काः'], n: ['किम्','के','कानि'] },
+  3: { m: ['केन','काभ्याम्','कैः'], f: ['कया','काभ्याम्','काभिः'], n: ['केन','काभ्याम्','कैः'] }, 4: { m: ['कस्मै','काभ्याम्','केभ्यः'], f: ['कस्यै','काभ्याम्','काभ्यः'], n: ['कस्मै','काभ्याम्','केभ्यः'] },
+  5: { m: ['कस्मात्','काभ्याम्','केभ्यः'], f: ['कस्याः','काभ्याम्','काभ्यः'], n: ['कस्मात्','काभ्याम्','केभ्यः'] }, 6: { m: ['कस्य','कयोः','केषाम्'], f: ['कस्याः','कयोः','कासाम्'], n: ['कस्य','कयोः','केषाम्'] },
+  7: { m: ['कस्मिन्','कयोः','केषु'], f: ['कस्याम्','कयोः','कासु'], n: ['कस्मिन्','कयोः','केषु'] },
+};
+function anvayaKim(sentence, i) {
+  const code = (sentence.wordCodes || [])[i] || '', g = { 'पुं': 'm', 'स्त्री': 'f', 'नपुं': 'n' }[(sentence.wordGenders || [])[i]] || 'm';
+  if (!/^[1-7][1-3]$/.test(code)) return null;
+  return KIM[code[0]][g][+code[1] - 1];
+}
+// कीदृश declined like the participle it asks for (कीदृशः अपि न वेत्ति? → सम्बोधितः अपि)
+const KIDRSHA = { 1: { m: ['कीदृशः','कीदृशौ','कीदृशाः'], f: ['कीदृशी','कीदृश्यौ','कीदृश्यः'], n: ['कीदृशम्','कीदृशे','कीदृशानि'] },
+  2: { m: ['कीदृशम्','कीदृशौ','कीदृशान्'], f: ['कीदृशीम्','कीदृश्यौ','कीदृशीः'], n: ['कीदृशम्','कीदृशे','कीदृशानि'] },
+  3: { m: ['कीदृशेन','कीदृशाभ्याम्','कीदृशैः'], f: ['कीदृश्या','कीदृशीभ्याम्','कीदृशीभिः'], n: ['कीदृशेन','कीदृशाभ्याम्','कीदृशैः'] } };
+function anvayaKidrsha(sentence, i) {
+  const code = (sentence.wordCodes || [])[i] || '', g = { 'पुं': 'm', 'स्त्री': 'f', 'नपुं': 'n' }[(sentence.wordGenders || [])[i]] || 'm';
+  return /^[1-3][1-3]$/.test(code) ? KIDRSHA[code[0]][g][+code[1] - 1] : null;
+}
 function anvayaQuestion(step, sentence) {
+  const d = anvayaData(), u0 = step.unit;
+  // the verb as it will be asked about — with its न when the verse negates it (कः न वेत्ति?)
+  const verbPhrase = vi => vi == null ? '' : ((d.units.some(x => x.kind === 'neg' && x.verb === vi) ? 'न ' : '') + sentence.words[vi]);
+  if (u0.kind === 'neg') return ['निषेधः', `The verb <b>${esc(sentence.words[u0.verb])}</b> is negated — click the negation; it stands right before the verb.`];
+  const head = (u0.core || u0.w)[0], kim = anvayaKim(sentence, head), vp = esc(verbPhrase(u0.verb));
+  const ask = q => `<span class="anv-q">${q}</span> `;
+  if (u0.kind === 'kr') {   // by kṛdanta type: absolutive किं कृत्वा? · infinitive किं कर्तुम्? · participle कीदृशः (अपि)?
+    const kw = esc(sentence.words[head]);
+    if (u0.krt === 'inf') return ['तुमुन्', `${ask(`किं कर्तुम् ${vp}?`)}The purpose — the infinitive (…तुम्) of “${vp}”`];
+    if (u0.krt === 'part') { const kd = anvayaKidrsha(sentence, head);
+      return ['कृदन्तम्', `${ask(`${kd || 'कीदृशः'}${u0.api ? ' अपि' : ''} ${vp}?`)}${u0.api ? 'Even being in what state? — the participle with अपि (“though …”)' : 'In what state? — the participle'}`]; }
+    return ['पूर्वकालः', `${ask(`किं कृत्वा ${vp}?`)}Having done what? — the absolutive (…त्वा / …य) “${kw}”`];
+  }
+  if (u0.role === 'nominalHead') return ['उद्देश्यम्', `${ask(`${kim || 'किम्'} [अस्ति]?`)}What is the subject of this statement?`];
+  const finiteVerb = u0.verb != null && d.units.some(x => x.kind === 'verb' && x.w.includes(u0.verb));
+  if (u0.role === 'agreementKarma' && finiteVerb) {   // predicate of the OBJECT: भ्रान्ति-आरोपितम् कीदृशम् कलयति? → साधु
+    const k = d.units.find(x => x.role === 'karma' && x.verb === u0.verb);
+    if (k) return ['कर्मसमानाधिकरणम्', `${ask(`${esc(sentence.words[(k.core || k.w)[0]])} ${anvayaKidrsha(sentence, head) || 'कीदृशम्'} ${vp}?`)}As what does it regard the object — the object's predicate`];
+  }
+  if (u0.role === 'agreementKarta' || u0.role === 'agreementKarma')   // किम् असि? (finite) · शक्तिः का? (verbless: ask of the subject)
+    return ['विधेयम्', `${ask(finiteVerb ? `${kim || 'किम्'} ${vp}?` : `${vp} ${kim || 'किम्'}?`)}What is said about it (the predicate)?`];
+  const caseN = +(((sentence.wordCodes || [])[head] || '')[0]) || 0;
+  const adverb = caseN >= 3 ? kim : 'कथम्';   // an inflected adjunct gets its own interrogative (कैः न लभ्यते?); adverbs कथम्
+  const fixed = { modifiers: adverb, remaining: adverb, satisaptami: `${kim || 'कस्मिन्'} सति`, adhikarana: kim || 'कुत्र', hetu: kim || 'कस्मात्', apadana: kim || 'कुतः' };
+  const qq = ANVAYA_Q[u0.role];
+  const interrog = fixed[u0.role] || kim;
+  if (interrog && qq && u0.kind === 'unit') return [qq[0], `${ask(`${interrog} ${vp}?`)}${qq[1].replace('{v}', vp)}`];
+
   const u = step.unit, v = u.verb != null ? sentence.words[u.verb] : '';
   if (u.kind === 'lead') return ['आरम्भः', 'Which word opens this clause? (a यथा / यत् / यदा …, its तथा / तत् / तदा, or अथ / ततः …)'];
   if (u.kind === 'kr') return ['पूर्वकालः', `The participle/absolutive phrase: click “${esc(sentence.words[u.w[u.w.length - 1]])}” and the words that belong to it`];
@@ -5018,17 +5099,32 @@ function renderAnvaya() {
     const parked = step.type === 'anvVerbs' ? '' : anvayaSteps[0].type === 'anvVerbs' ? anvayaSteps[0].expected.filter(i => !anvayaLineHas(i)).map(i => `<span class="anv-park">${esc(words[i])}</span>`).join(' ') : '';
     let prompt, ctrl = '';
     if (step.type === 'anvVerbs') prompt = ['क्रिया', 'Find the main verb(s) — the finite verb of each clause. They will close their clauses.'];
+    else if (step.type === 'anvKrt') prompt = ['कृदन्तम्', `Now the verbal (कृत्) forms that <b>govern their own कारक</b> — absolutives (…त्वा / …य), infinitives (…तुम्) and participles that take their own कर्ता / कर्म / करण (${step.expected.length} here). Their own कारकs are asked next, of them (केन …? · किम् …?).`];
     else if (step.type === 'anvSupply') {
       prompt = ['अध्याहारः', 'Is a word unstated here? Supply it.'];
       const u = step.unit, opts = [...u.options, '— nothing —'];
       const ok = o => o === u.text || (u.acceptNone && o === '— nothing —');
       ctrl = `<div class="options">${opts.map(o => `<button class="opt ${view.checked ? (ok(o) ? 'correct' : (o === view.anvPicked ? 'wrong' : '')) : ''}" data-o="${esc(o)}" ${view.checked ? 'disabled' : ''}>${esc(o)}</button>`).join('')}</div>
-        ${view.checked ? `<div class="tut-explain">${u.supplyKind === 'copula' ? `The copula [${esc(u.text)}] is understood; supplying it is optional.` : u.supplyKind === 'pronoun' ? `The verb's person requires [${esc(u.text)}] as the unstated kartā.` : `[${esc(u.text)}] — the verb is carried over from the other clause.`}</div>` : ''}`;
+        ${view.checked ? `<div class="tut-explain">${u.supplyKind === 'copula' ? `The copula [${esc(u.text)}] is understood; supplying it is optional.` : u.supplyKind === 'pronoun' ? `The verb's person requires [${esc(u.text)}] as the unstated kartā.` : u.supplyKind === 'carry' ? `The kartā of the previous clause carries over; supplying [${esc(u.text)}] is optional (Apte §397 — a “contracted” compound sentence).` : `[${esc(u.text)}] — the verb is carried over from the other clause.`}</div>` : ''}`;
     } else prompt = anvayaQuestion(step, sentence);
     const clickable = step.type !== 'anvSupply';
-    const exp = new Set(step.expected || []);
+    // clause boundaries (built on वाक्य-विभाग, Harsha 2026-10-03): once the verbs are found, each clause is boxed (the
+    // gold वाक्य-विभाग clauses, same renderer) and the clause the current question belongs to is highlighted; when the
+    // verse interleaves its clauses (no clean boxes) each clause's words share an underline colour instead. The found
+    // verbs + kṛdantas are marked as the clauses' anchors.
+    const cls = sentence.clauses || [], verbsDone = anvayaStepIdx > 0 || view.checked;
+    const showCl = verbsDone && cls.length > 1, gold = showCl ? clauseGroupsFromGold(sentence) : null;
+    const curCl = step.unit && step.unit.clause != null ? cls.findIndex(c => c.id === step.unit.clause) : -1;
+    const clOf = {}; cls.forEach((c, k) => (c.words || []).forEach(i => { clOf[i] = k; }));
+    const passed = t => anvayaSteps.some((st, p) => st.type === t && (p < anvayaStepIdx || (p === anvayaStepIdx && view.checked)));
+    const anchors = new Set([...(passed('anvVerbs') ? (anvayaSteps.find(x => x.type === 'anvVerbs') || {}).expected || [] : []),
+      ...(passed('anvKrt') ? (anvayaSteps.find(x => x.type === 'anvKrt') || {}).expected || [] : [])]);
+    const wordClass = i => [anchors.has(i) ? 'anv-anchor' : '', showCl && !gold && clOf[i] != null ? `anv-c${clOf[i] % 5}${clOf[i] === curCl ? ' anv-cur' : ''}` : ''].join(' ').trim();
+    const verseOpts = { groups: gold, currentGroupTop: curCl, wordClass };
+    const exp = new Set([...(step.core || step.expected || []), ...[...view.selectedIndices].filter(i => (step.expected || []).includes(i))]);
     body = `
-      <div class="tutorial-verse prompt">${clickable ? renderClickableVerse(words, { selected: view.selectedIndices, disabled: view.checked, expected: view.checked ? exp : null }) : esc(words.join(' '))}</div>
+      <div class="tutorial-verse prompt">${renderClickableVerse(words, { selected: clickable ? view.selectedIndices : new Set(), disabled: clickable ? view.checked : true, expected: clickable && view.checked ? exp : null, ...verseOpts })}</div>
+      ${showCl && !gold ? '<div class="anv-legend">The clauses interleave here — words of one clause share an underline colour; the current clause is shaded.</div>' : ''}
       <div class="anv-line">${line || '<span class="muted">अन्वयः …</span>'} ${parked ? `<span class="anv-gap">…</span> ${parked}` : ''}</div>
       <div class="tut-step-label"><b>${esc(prompt[0])}</b> ${prompt[1]}</div>
       ${ctrl}
@@ -5062,14 +5158,18 @@ function renderAnvaya() {
       view = { ...view, selectedIndices: sel }; renderAnvaya();
     });
     document.getElementById('anvCheckStep').onclick = () => {
-      if (!d.uncertain) anvayaScores.push(tutorialStepScore(view.selectedIndices, new Set(step.expected), false));
+      if (!d.uncertain) anvayaScores.push(anvayaStepScore(view.selectedIndices, step));
       view = { ...view, checked: true }; renderAnvaya();
     };
   }
   const nx = document.getElementById('anvNext');
   if (nx) nx.onclick = () => {
-    if (step.type !== 'anvVerbs') { anvayaAppend(step.before); if (step.unit && step.unit.kind !== 'supply') anvayaAppend([step.unit]); }
-    if (step.type === 'anvSupply' && view.anvPicked !== '— nothing —') anvayaLine.push({ s: step.unit.text });
+    if (step.type !== 'anvVerbs' && step.type !== 'anvKrt') {
+      anvayaAppend(step.before);
+      if (step.unit && step.unit.kind !== 'supply') anvayaAppend([step.unit]);
+      if (step.type === 'anvSupply' && view.anvPicked !== '— nothing —') anvayaLine.push({ s: step.unit.text });
+      anvayaAppend(step.after);
+    }
     anvayaStepIdx++; view = { ...view, selectedIndices: new Set(), checked: false, anvPicked: null }; renderAnvaya();
   };
 }
@@ -5175,6 +5275,8 @@ function renderTutorialPicker() {
   const hb = document.getElementById('homeBtn'); if (hb) hb.onclick = () => { clearTimeout(pendingAdvanceTimer); view = { screen: 'dashboard' }; renderDashboard(); };
   try {
     const q = new URLSearchParams(location.search);
+    // अन्वय tutorial (in testing, not linked from the home page): ?mode=anvaya opens its picker (text → verse)
+    if (q.get('mode') === 'anvaya' && !q.get('tut')) { tutorialMode = 'anvaya'; view = { screen: 'tutorialPicker' }; renderTutorialPicker(); return; }
     if (q.get('tut')) {
       if (q.get('cstyle') === 'guided' || q.get('cstyle') === 'socratic') clauseStyle = q.get('cstyle');
       if (['all', 'smart', 'auto'].includes(q.get('cskip'))) clauseSkip = q.get('cskip');
