@@ -3,15 +3,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>वैदिक-अन्वेषणम् · Vedic word search (TITUS) — साहित्य-व्याकरणम्</title>
+<title>वैदिक-अन्वेषणम् · Vedic word search (TITUS) — स्वाध्याय-दीपिका</title>
+<script>
+/* ONE canonical page shipped to EVERY site (CLAUDE.md: the Vedic word search is on all sites). Brand + accent adapt to the
+   site it is served from: साहित्य-व्याकरणम् (indigo) on the sister site, else स्वाध्याय-दीपिका (saffron). Runs before paint. */
+window.VV_TOOL_SITE=(/\/(sahitya-vyakaranam|sites\/sahitya)\//.test(location.pathname))
+  ?{brand:'साहित्य-व्याकरणम्',short:'सा·व्या',accent:'#4f46e5',dark:'#a5b4fc'}
+  :{brand:'स्वाध्याय-दीपिका',short:'स्वा·दीपिका',accent:'#d97706',dark:'#f5b544'};
+document.documentElement.style.setProperty('--brand-l',VV_TOOL_SITE.accent);
+document.documentElement.style.setProperty('--brand-d',VV_TOOL_SITE.dark);
+document.title=document.title.replace('स्वाध्याय-दीपिका',VV_TOOL_SITE.brand);
+</script>
 <style>
-:root{--bg:#fbfaf7;--card:#fff;--ink:#20242c;--muted:#6b7280;--line:#e6e2da;--brand:#4f46e5;--code:#f3f2ee;--warn:#b45309}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14161a;--card:#1c1f26;--ink:#e6e8ec;--muted:#9aa1ac;--line:#2b2f38;--brand:#a5b4fc;--code:#232733;--warn:#f8b06a}}
-:root[data-theme=dark]{--bg:#14161a;--card:#1c1f26;--ink:#e6e8ec;--muted:#9aa1ac;--line:#2b2f38;--brand:#a5b4fc;--code:#232733;--warn:#f8b06a}
+:root{--bg:#fbfaf7;--card:#fff;--ink:#20242c;--muted:#6b7280;--line:#e6e2da;--brand:var(--brand-l,#d97706);--code:#f3f2ee;--warn:#b45309}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14161a;--card:#1c1f26;--ink:#e6e8ec;--muted:#9aa1ac;--line:#2b2f38;--brand:var(--brand-d,#f5b544);--code:#232733;--warn:#f8b06a}}
+:root[data-theme=dark]{--bg:#14161a;--card:#1c1f26;--ink:#e6e8ec;--muted:#9aa1ac;--line:#2b2f38;--brand:var(--brand-d,#f5b544);--code:#232733;--warn:#f8b06a}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
 .wrap{max-width:860px;margin:0 auto;padding:14px 18px 60px}
-.topbar{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.topbar{display:flex;align-items:center;gap:12px;margin:0 -18px 6px;padding:8px 18px;position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.topbar .bshort{display:none}
+@media (max-width:640px){.topbar .bfull{display:none}.topbar .bshort{display:inline}}
 .topbar a.brandlink{color:var(--brand);font-weight:800;font-size:14px;text-decoration:none;font-family:'Noto Serif Devanagari',serif}
 .topbar .sp{flex:1}
 button,select,input{font:inherit;color:inherit}
@@ -42,7 +54,8 @@ li{margin:3px 0}
 <body>
 <div class="wrap">
   <div class="topbar">
-    <a class="brandlink" href="index.html" title="साहित्य-व्याकरणम् — Home" aria-label="साहित्य-व्याकरणम् — Home">साहित्य-व्याकरणम्</a>
+    <a class="brandlink" id="brandlink" href="index.html" data-vv-brand data-short="स्वा·दीपिका" title="स्वाध्याय-दीपिका — Home" aria-label="स्वाध्याय-दीपिका — Home"><span class="bfull">स्वाध्याय-दीपिका</span><span class="bshort">स्वा·दीपिका</span></a>
+    <script>(function(){var a=document.getElementById('brandlink'),S=window.VV_TOOL_SITE;a.querySelector('.bfull').textContent=S.brand;a.querySelector('.bshort').textContent=S.short;a.dataset.short=S.short;a.title=a.getAttribute('aria-label').replace('स्वाध्याय-दीपिका',S.brand);a.setAttribute('aria-label',a.title);})();</script>
     <span class="sp"></span><button id="tog">◐ theme</button>
   </div>
   <h1>🔭 वैदिक-अन्वेषणम् · Vedic word search</h1>
