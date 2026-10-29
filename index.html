@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>साहित्य-व्याकरणम्</title>
+<!doctype html><html><head><script data-vv-theme>(function(){var d=document.documentElement,K="vv_theme",m=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)"),last=null;function pref(){try{var t=localStorage.getItem(K);return t==="light"||t==="dark"?t:""}catch(e){return ""}}function apply(){last=pref()||(m&&m.matches?"dark":"light");d.setAttribute("data-theme",last)}apply();if(m&&m.addEventListener)m.addEventListener("change",function(){if(!pref())apply()});window.addEventListener("storage",function(e){if(e.key===K)apply()});try{new MutationObserver(function(){var v=d.getAttribute("data-theme");if(v!==last&&(v==="light"||v==="dark")){last=v;try{localStorage.setItem(K,v)}catch(e){}}}).observe(d,{attributes:true,attributeFilter:["data-theme"]})}catch(e){}window.__vvTheme={get:pref,set:function(v){try{v?localStorage.setItem(K,v):localStorage.removeItem(K)}catch(e){}apply()}}})();</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>साहित्य-व्याकरणम्</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#3a2f2a">
 <style>
@@ -10,6 +10,9 @@
  header h1{margin:0;font-size:18px;font-weight:600;flex:1}
  #gearBtn{background:transparent;border:1px solid rgba(255,255,255,.4);color:#fff;font-size:18px;line-height:1;border-radius:8px;padding:5px 9px;cursor:pointer}
  #gearBtn:hover{background:rgba(255,255,255,.12)}
+ #srchBtn{background:transparent;border:1px solid rgba(255,255,255,.4);color:#fff;font-size:16px;line-height:1;border-radius:8px;padding:6px 8px;cursor:pointer}
+ #srchBtn:hover{background:rgba(255,255,255,.12)} #srchBtn[hidden],#hsForm[hidden]{display:none}
+ #hsForm{margin:0;flex:0 1 320px;min-width:0} #hsQ{width:100%;box-sizing:border-box;font:inherit;font-size:14px;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.5);background:#fff;color:#222}
  #settings-ov{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:16px}
  #settings-ov.on{display:flex}
  #settings-box{background:#fff;border-radius:12px;max-width:400px;width:100%;padding:20px;box-shadow:0 12px 40px rgba(0,0,0,.3)}
@@ -29,16 +32,31 @@
  .dash-actions{display:flex;gap:8px;flex-wrap:wrap}
  .dash-lane{margin-bottom:14px}
  /* homepage sections (Harsha 2026-10-13): वेदान्त-ग्रन्थाः and व्याकरणम् as two clearly separate parts of the site */
- .home-sec{margin:0 0 26px}
+ .home-sec{margin:0 0 26px;scroll-margin-top:64px}   /* ☰ "Go to" links land below the sticky header */
  .site-tag{margin:2px 0 18px;font:600 16px "Noto Serif Devanagari","Kohinoor Devanagari","Devanagari MT",serif;color:#7a5a2a;letter-spacing:.01em}   /* the site's own description (Harsha 2026-10-13) */
  .sec-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:0 0 10px;padding-bottom:6px;border-bottom:2px solid #e8dcc4;font:700 22px "Noto Serif Devanagari","Kohinoor Devanagari","Devanagari MT",serif;color:#7c4a03}
- .sec-head .sec-lat{font:500 13px system-ui,sans-serif;color:#7a6a55}
+ .sec-head .sec-lat{font:600 13.5px system-ui,sans-serif;color:#5b4a35}   /* section one-liners stand out a little (batch 3) */
  .sec-head .sec-prog{margin-left:auto;font:500 13px system-ui,sans-serif;color:#555}
  .vy-panel{background:#f4f6fb;border:1px solid #dde3f2;border-radius:12px;padding:14px 16px 6px}
  .vy-panel .sec-head{color:#3b4a8a;border-bottom-color:#d3dbef}
- .vy-panel.shut .vy-body{display:none} .vy-panel.shut{padding-bottom:4px} .vy-panel.shut .sec-head{border-bottom:0;margin-bottom:4px}
+ .fold-sec.shut .fold-body{display:none} .fold-sec.shut{padding-bottom:4px} .fold-sec.shut .sec-head{border-bottom:0;margin-bottom:4px}
+ .fold-sec .sec-head{cursor:pointer;user-select:none} .fold-sec .sec-head:hover .sec-fold{color:#b45309}
+ .vv-credit{margin:26px 0 8px;padding-top:10px;border-top:1px solid #e8dcc4;font-size:12px;line-height:1.5;color:#7a6a55;text-align:center} .vv-credit a{color:inherit}
+ .home-lead{margin:4px 0 16px} .home-lead .l1{font:600 17px/1.45 system-ui,-apple-system,sans-serif;color:#3d2c12} .home-lead .l2{font-size:13px;line-height:1.5;color:#7a6a55;margin-top:2px} .home-lead .l2 a{color:#b45309}
+ .gnote{font-size:12px;color:#7a6a55;margin:-2px 0 8px;font-style:italic}
+ .fold-group.shut .readgrid{display:none} .fold-group .readgroup-head .sec-fold{font-size:13px}
+ .lane-sub a{color:#b45309}
+ #myStudy .study-counts{font-size:13px;color:#57534e;margin:0 0 8px} #myStudy .study-counts a{color:#b45309;font-weight:600}
+ #myStudy .study-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+ #myStudy .study-col{background:#fff;border:1px solid #e7e2d6;border-radius:10px;padding:8px 10px}
+ #myStudy .study-h{font-size:12px;font-weight:600;color:#7a6a55;margin:0 0 4px}
+ #myStudy .study-row{display:block;text-decoration:none;color:inherit;padding:4px 0;border-top:1px dashed #eee;font-size:13px}
+ #myStudy .study-row:first-of-type{border-top:0} #myStudy .study-row b{font-family:'Noto Serif Devanagari',serif;color:#3a2f2a;font-weight:600;margin-right:6px}
+ #myStudy .study-row span{color:#78716c;font-family:'Noto Serif Devanagari',serif} #myStudy .study-none,#myStudy .study-empty{font-size:13px;color:#78716c}
+ #homeBtn{display:inline-flex;align-items:center;gap:6px} #homeBtn .vv-logo{height:26px;width:auto} #homeBtn:hover .bfull,#homeBtn:hover .bshort{text-decoration:underline;text-underline-offset:3px}
+ #dictBtn{background:transparent;border:1px solid rgba(255,255,255,.4);color:#fff;font-size:16px;line-height:1;border-radius:8px;padding:6px 8px;cursor:pointer} #dictBtn:hover{background:rgba(255,255,255,.12)}
  .sec-fold{background:none;border:0;cursor:pointer;font-size:15px;color:inherit;padding:0 2px 0 0;line-height:1}
- /* order: वेदान्त-ग्रन्थाः → उपकरणानि → व्याकरणम् → सहायक-सामग्री (Resources) — each its own heading */
+ /* order (2026-10-21 batch 3): वेदान्त-ग्रन्थाः → पारायणम् → मट्टिप्पणीसञ्चयः → उपकरणानि → संस्कृत-भाषा-व्यायाम-शाला → सहायक-सामग्री (last); all but the texts folded by default */
  .readgrid.resgrid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));grid-auto-rows:auto}
  .rcard.rescard{gap:3px}
  .rcard.rescard .rtitle{font-size:14px;font-family:inherit;font-weight:600;line-height:1.35}
@@ -159,17 +177,17 @@
  .readgroup-head .gtitle{font-size:14px;font-weight:600;color:#3a2f2a}
  .readgroup-head .gtitle .lat{font-weight:400;color:#7a6a55;font-size:12px}
  .readgroup-head .gcount{font-size:11px;color:#7a6a55;margin-left:auto}
- .readgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));grid-auto-rows:1fr;gap:8px;margin-bottom:6px}   /* equal-height cards in every row */
+ .readgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));grid-auto-rows:auto;gap:8px;margin-bottom:6px}   /* each row sizes to its own tallest card (Harsha 2026-10-21 #9: was 1fr = every row as tall as the tallest card on the page) */
  .rcard{display:flex;flex-direction:column;gap:5px;background:#fff;border:1px solid #e3e0da;border-radius:9px;padding:10px 12px;cursor:pointer;transition:box-shadow .1s,border-color .1s;color:inherit;text-decoration:none}
  .rcard:hover{box-shadow:0 2px 10px rgba(0,0,0,.08);border-color:#c9a35a}
  .rcard .rtitle{font-size:16px;font-weight:600;color:#3a2f2a;font-family:"Noto Serif Devanagari","Kohinoor Devanagari","Devanagari MT",serif}
  .rcard .rlat{font-size:11px;color:#7a6a55;margin-top:-3px}
- .offers{display:flex;gap:5px;flex-wrap:wrap;margin-top:auto;align-items:center}
+ .offers{display:flex;gap:5px;flex-wrap:wrap;align-items:center}   /* pills top-aligned right under the name in every card (spare space falls to the bottom; Harsha 2026-10-27) */
  .pill{font-size:10px;line-height:1.6;padding:0 7px;border-radius:999px;border:1px solid;white-space:nowrap}
  .pill.mula{color:#a07b1e;border-color:#d8c08a;background:#fbf6ea}
  .pill.bhasya{color:#1a56db;border-color:#b9cdf5;background:#fff}
  .rnote{font-size:10px;color:#7a6a55;font-style:italic;flex-basis:100%}   /* note always on its own line, never beside the pills */
- .pill.xtra{display:none} .rcard:hover .pill.xtra,.rcard.allp .pill.xtra{display:inline-block} .rcard:hover .pill.more,.rcard.allp .pill.more{display:none}
+ .pill.xtra{display:none} .rcard:hover .pill.xtra,.rcard.allp .pill.xtra{display:inline-block} .rcard:hover .pill.more,.rcard.allp .pill.more{display:none} .rnote.xtra{display:none} .rcard:hover .rnote.xtra,.rcard.allp .rnote.xtra{display:block}   /* a folded card's note shows with its extra pills */
  .pill.more{color:#7a6a55;border-color:#d6d3d1;background:#fff;cursor:pointer}   /* "+N …" → the rest of the layers (hover / tap) */
  .modegrid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
  .modecard{padding:13px 15px;gap:4px}
@@ -190,12 +208,66 @@
  .anv-cur{background:#fbf7ee;border-radius:4px}
  .anv-legend{font-size:13px;color:#8a7a5a;margin:-4px 0 6px}
  .anv-q{font-family:'Noto Serif Devanagari',serif;font-size:19px;font-weight:700;color:#7c5a1e;margin-right:6px}
+ /* ===== DARK MODE (Harsha 2026-10-24, reader feedback): the homepage had none — light page under a dark header, while every
+    reading page went dark. <html data-theme> is ALWAYS set by the head script build_deploy injects (the reader's ☰ ⚙ Theme choice,
+    else the computer's), so one :root[data-theme=dark] block covers it. Palette = the reading pages' dark tokens. ===== */
+ :root[data-theme=dark]{color-scheme:dark;--bg:#14161a;--card:#1c1f26;--ink:#e6e8ec;--muted:#bcc2cb;--line:#2b2f38;--brand:#f5b544}
+ :root[data-theme=dark] body{background:#14161a;color:#e6e8ec}
+ :root[data-theme=dark] header{background:#241d1a;border-bottom:1px solid #2b2f38}
+ :root[data-theme=dark] #hsQ{background:#1c1f26;color:#e6e8ec;border-color:#4a4f5a}
+ :root[data-theme=dark] .site-tag{color:#e0b46a}
+ :root[data-theme=dark] .sec-head{color:#f0b76a;border-bottom-color:#3a3226}
+ :root[data-theme=dark] .sec-head .sec-lat{color:#c9bda6}
+ :root[data-theme=dark] .sec-head .sec-prog,:root[data-theme=dark] .dash-head{color:#bcc2cb}
+ :root[data-theme=dark] .vy-panel{background:#1a1f2b;border-color:#2b3550}
+ :root[data-theme=dark] .vy-panel .sec-head{color:#9fb3f5;border-bottom-color:#2b3550}
+ :root[data-theme=dark] .fold-sec .sec-head:hover .sec-fold{color:#a5b4fc}
+ :root[data-theme=dark] .vv-credit{border-top-color:#3a3226;color:#bcc2cb}
+ :root[data-theme=dark] .home-lead .l1{color:#e6e8ec}
+ :root[data-theme=dark] .home-lead .l2,:root[data-theme=dark] .gnote,:root[data-theme=dark] .muted,:root[data-theme=dark] .picker-sub,:root[data-theme=dark] .lane-label,:root[data-theme=dark] .lane-sub,:root[data-theme=dark] .dash-setting,:root[data-theme=dark] .stats,:root[data-theme=dark] .category-stats,:root[data-theme=dark] .card .label,:root[data-theme=dark] .picker-level label,:root[data-theme=dark] .scope-toggle,:root[data-theme=dark] .scope-toggle .scope-head,:root[data-theme=dark] .deep-toggle,:root[data-theme=dark] .skills-toggle,:root[data-theme=dark] .skills-toggle .skills-head,:root[data-theme=dark] .quiz-head .label,:root[data-theme=dark] .quiz-head .mode-tag,:root[data-theme=dark] .quiz-head .batch,:root[data-theme=dark] .quiz-head .streak,:root[data-theme=dark] .prompt-hint,:root[data-theme=dark] .src,:root[data-theme=dark] .report-area,:root[data-theme=dark] .report-autosent-note,:root[data-theme=dark] .celebrate p,:root[data-theme=dark] .tutorial-head,:root[data-theme=dark] .tutcode,:root[data-theme=dark] .readgroup-head .gtitle .lat,:root[data-theme=dark] .readgroup-head .gcount,:root[data-theme=dark] .rcard .rlat,:root[data-theme=dark] .rnote,:root[data-theme=dark] .modedesc,:root[data-theme=dark] .anv-legend,:root[data-theme=dark] .set-row .set-hint{color:#bcc2cb}
+ :root[data-theme=dark] .home-lead .l2 a,:root[data-theme=dark] .lane-sub a,:root[data-theme=dark] #myStudy .study-counts a{color:#f5b544}
+ :root[data-theme=dark] #myStudy .study-counts,:root[data-theme=dark] #myStudy .study-h,:root[data-theme=dark] #myStudy .study-row span,:root[data-theme=dark] #myStudy .study-none,:root[data-theme=dark] #myStudy .study-empty{color:#bcc2cb}
+ :root[data-theme=dark] #myStudy .study-col{background:#1c1f26;border-color:#2b2f38}
+ :root[data-theme=dark] #myStudy .study-row{border-top-color:#2b2f38}
+ :root[data-theme=dark] #myStudy .study-row b{color:#ece6d6}
+ :root[data-theme=dark] .rescard .ext{color:#bcc2cb} :root[data-theme=dark] .rescard .rhost{color:#67d3e8}
+ :root[data-theme=dark] .primary{background:#b45309;color:#fff} :root[data-theme=dark] .primary:hover{background:#92400e}
+ :root[data-theme=dark] .secondary{background:#1c1f26;border-color:#4a4f5a;color:#e6e8ec} :root[data-theme=dark] .secondary:hover{border-color:#f5b544}
+ :root[data-theme=dark] .link{color:#6fd08f}
+ :root[data-theme=dark] .category,:root[data-theme=dark] .card,:root[data-theme=dark] .question,:root[data-theme=dark] .rcard,:root[data-theme=dark] #settings-box{background:#1c1f26;border-color:#2b2f38}
+ :root[data-theme=dark] .card:hover,:root[data-theme=dark] .rcard:hover{box-shadow:0 2px 10px rgba(0,0,0,.5);border-color:#c9a35a}
+ :root[data-theme=dark] .card.mastered{border-color:#2f6b45;background:#16261c}
+ :root[data-theme=dark] .category summary,:root[data-theme=dark] .card .code,:root[data-theme=dark] .picker-head h2,:root[data-theme=dark] .quiz-head .code,:root[data-theme=dark] .celebrate h2,:root[data-theme=dark] .tut-step-label,:root[data-theme=dark] .readgroup-head .gtitle,:root[data-theme=dark] .report-breadcrumb .ref,:root[data-theme=dark] #settings-box h2,:root[data-theme=dark] .set-row .set-label,:root[data-theme=dark] .set-check{color:#e6e8ec}
+ :root[data-theme=dark] .rcard .rtitle{color:#ece6d6}
+ :root[data-theme=dark] .picker-level select,:root[data-theme=dark] .verse-jump select,:root[data-theme=dark] .set-select,:root[data-theme=dark] .report-area input,:root[data-theme=dark] .report-area textarea{background:#1c1f26;color:#e6e8ec;border-color:#4a4f5a}
+ :root[data-theme=dark] .set-seg{border-color:#4a4f5a} :root[data-theme=dark] .set-seg button{background:#1c1f26;color:#bcc2cb} :root[data-theme=dark] .set-seg button.on{background:#f5b544;color:#1a1410}
+ :root[data-theme=dark] .badge{color:#8fe0a8;background:#16261c;border-color:#2f6b45}
+ :root[data-theme=dark] .bar{background:#2b2f38}
+ :root[data-theme=dark] .prompt .plus,:root[data-theme=dark] .prompt .arrow{color:#bcc2cb}
+ :root[data-theme=dark] .context,:root[data-theme=dark] .feedback{color:#cfd3da}
+ :root[data-theme=dark] .opt{background:#1c1f26;border-color:#4a4f5a;color:#e6e8ec}
+ :root[data-theme=dark] .opt:hover:not(:disabled){border-color:#f5b544}
+ :root[data-theme=dark] .opt.correct,:root[data-theme=dark] .tutword.correct,:root[data-theme=dark] .tutword.missed{background:#16261c;border-color:#3f9e5f;color:#8fe0a8}
+ :root[data-theme=dark] .opt.wrong,:root[data-theme=dark] .tutword.wrong{background:#2a1715;border-color:#c0392b;color:#f19a8f}
+ :root[data-theme=dark] .report-copy,:root[data-theme=dark] .report-breadcrumb,:root[data-theme=dark] .tut-explain{background:#23262d;color:#cfd3da;border-color:#2b2f38}
+ :root[data-theme=dark] .report-area.reported{color:#6fd08f} :root[data-theme=dark] .report-status.error{color:#f19a8f}
+ :root[data-theme=dark] .tutword:hover{background:#262a33}
+ :root[data-theme=dark] .tutword.selected{background:#3a3226;border-color:#c9a35a}
+ :root[data-theme=dark] .tut-elided{color:#a89f8f}
+ :root[data-theme=dark] .clause-group{border-color:#4a4f5a} :root[data-theme=dark] .clause-group.current,:root[data-theme=dark] .anv-cur{background:#231f17;border-color:#c9a35a}
+ :root[data-theme=dark] .mulahue,:root[data-theme=dark] .modetag,:root[data-theme=dark] .anv-q{color:#e0bd6a} :root[data-theme=dark] .bhasyahue{color:#7ab0ff}
+ :root[data-theme=dark] .pill.mula{color:#e0bd6a;border-color:#6b5a2c;background:#241f12}
+ :root[data-theme=dark] .pill.bhasya{color:#7ab0ff;border-color:#2c4570;background:#151d2c}
+ :root[data-theme=dark] .pill.more{color:#bcc2cb;border-color:#3a3f4a;background:#1c1f26}
+ :root[data-theme=dark] .anv-line{border-color:#6b5a2c} :root[data-theme=dark] .anv-model{background:#241f12}
+ :root[data-theme=dark] body>footer a{color:#f5b544 !important}   /* the Sources link carries an inline light-mode colour */
+ :root[data-theme=dark] .anv-sup{color:#6fd08f} :root[data-theme=dark] .anv-park{color:#8a909a} :root[data-theme=dark] .anv-gap{color:#4a4f5a}
 </style></head><body>
-<header><button id="homeBtn" data-vv-brand data-short="सा·व्या" title="साहित्य-व्याकरणम् — Home" aria-label="साहित्य-व्याकरणम् — Home" style="background:none;border:none;padding:0;margin:0;cursor:pointer;font:inherit;font-weight:800;font-size:16px;color:#a5b4fc;letter-spacing:.02em"><span class="bfull">साहित्य-व्याकरणम्</span><span class="bshort">सा·व्या</span></button><span style="flex:1"></span><button id="gearBtn" title="Settings" aria-label="Settings">⚙</button></header>
+<header><button id="homeBtn" data-vv-brand data-short="सा·व्या" title="साहित्य-व्याकरणम् — Home" aria-label="साहित्य-व्याकरणम् — Home" style="background:none;border:none;padding:0;margin:0;cursor:pointer;font:inherit;font-weight:800;font-size:16px;color:#f5b544;letter-spacing:.02em"><span class="bfull">साहित्य-व्याकरणम्</span><span class="bshort">सा·व्या</span></button><span style="flex:1"></span><form id="hsForm" role="search" hidden><input id="hsQ" type="search" placeholder="Smart sandhi-aware search — e.g. आत्मा एव (finds आत्मैव)" autocomplete="off" aria-label="Search all texts"></form><button id="srchBtn" title="Smart sandhi-aware search — all texts ( / )" aria-label="Search all texts" aria-expanded="false" hidden>🔍</button><button id="dictBtn" title="Sanskrit dictionary — sanskritkosha.com" aria-label="Sanskrit dictionary">📖</button><button id="gearBtn" title="Menu — settings, library, help" aria-label="Menu" aria-haspopup="true">☰</button></header>
 <div id="app">loading…</div>
 <footer style="text-align:center;font-size:13px;margin:28px 0 18px"><a href="about.html" style="color:#b45309">Sources &amp; attribution · आधाराः</a></footer>
 
-<script src="site-config.bab81978b8.js"></script>
+<script src="site-config.f6dc1544ae.js"></script>
 <script src="quiz-items.5ba173a31f.js"></script>
 <script src="axis-manifest.5b29286de9.js"></script>
 <script src="tutorial-manifest.9c34ae5a9b.js"></script>
@@ -207,8 +279,9 @@
 <script src="samasa-peel.a8f1f18f36.js"></script>
 <script src="reading-nav.1d8a42d71b.js"></script>
 <script>if(window.ReadingNav&&window.SITE_CONFIG)Object.assign(ReadingNav.LEVELS,SITE_CONFIG.levels||{});</script>
-<script src="vv-store.ff05b39135.js"></script>
-<script src="app.375cc59ffa.js"></script>
+<script src="vv-store.f0ba357e3b.js"></script>
+<script src="vv-settings.4d031ca7f2.js"></script>
+<script src="app.4e4511a882.js"></script>
 <script>
 // Freshness during churn: updateViaCache:'none' → the browser always network-fetches sw.js (never
 // its HTTP cache); reg.update() proactively checks on load; and when a NEW sw version takes control

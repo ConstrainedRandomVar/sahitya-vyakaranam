@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="sa">
-<head>
+<head><script data-vv-theme>(function(){var d=document.documentElement,K="vv_theme",m=window.matchMedia&&matchMedia("(prefers-color-scheme: dark)"),last=null;function pref(){try{var t=localStorage.getItem(K);return t==="light"||t==="dark"?t:""}catch(e){return ""}}function apply(){last=pref()||(m&&m.matches?"dark":"light");d.setAttribute("data-theme",last)}apply();if(m&&m.addEventListener)m.addEventListener("change",function(){if(!pref())apply()});window.addEventListener("storage",function(e){if(e.key===K)apply()});try{new MutationObserver(function(){var v=d.getAttribute("data-theme");if(v!==last&&(v==="light"||v==="dark")){last=v;try{localStorage.setItem(K,v)}catch(e){}}}).observe(d,{attributes:true,attributeFilter:["data-theme"]})}catch(e){}window.__vvTheme={get:pref,set:function(v){try{v?localStorage.setItem(K,v):localStorage.removeItem(K)}catch(e){}apply()}}})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>★ My library — स्वाध्याय-सहकारी</title>
+<title>★ My library — अध्ययन-सहकारी</title>
 <!-- library.html — the reader's own bookmarks, collections and study notes (Harsha 2026-10-11, feedback #6/#7).
      Everything is read from VVStore (vv-store.js) = this browser's localStorage, shared by every site on this origin;
      nothing is sent anywhere. Share links (#c=…) carry a collection snapshot inside the URL itself. -->
 <style>
 :root{--bg:#fbfaf7;--card:#fff;--ink:#22201b;--muted:#6b6455;--line:#e6e0d4;--brand:#d97706;--acc:#b45309;--chip:#fdf3e1}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14161a;--card:#1c1f26;--ink:#e6e8ec;--muted:#9aa1ac;--line:#2b2f38;--brand:#f5b544;--acc:#f5b544;--chip:#2a2418}}
-:root[data-theme=dark]{--bg:#14161a;--card:#1c1f26;--ink:#e6e8ec;--muted:#9aa1ac;--line:#2b2f38;--brand:#f5b544;--acc:#f5b544;--chip:#2a2418}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14161a;--card:#1c1f26;--ink:#e6e8ec;--muted:#bcc2cb;--line:#2b2f38;--brand:#f5b544;--acc:#f5b544;--chip:#2a2418}}
+:root[data-theme=dark]{--bg:#14161a;--card:#1c1f26;--ink:#e6e8ec;--muted:#bcc2cb;--line:#2b2f38;--brand:#f5b544;--acc:#f5b544;--chip:#2a2418}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
 .dv{font-family:"Noto Serif Devanagari",serif}
@@ -41,6 +41,9 @@ textarea{width:100%;min-height:70px;font-family:"Noto Serif Devanagari",system-u
 h2{font-size:16px;margin:22px 0 8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 h2 .cnt{color:var(--muted);font-weight:400;font-size:13px}
 .empty{color:var(--muted);font-style:italic;padding:8px 2px}
+.hlq{background:#ecfccb;border-radius:6px;padding:4px 8px;box-shadow:inset 0 -1px 0 #4d7c0f}[data-theme=dark] .hlq{background:rgba(163,230,53,.2);box-shadow:inset 0 -1px 0 #a3e635}
+.tagf{display:flex;flex-wrap:wrap;gap:5px;margin:0 0 10px}.tagf button{font:12.5px system-ui,sans-serif;border:1px solid var(--line);border-radius:999px;padding:2px 9px;background:transparent;color:var(--ink);cursor:pointer}.tagf button.on{border-color:#4d7c0f;background:#ecfccb;color:#1a2e05}
+.warn{color:#b45309;font-size:12.5px}
 .colhead{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .colhead input{font-weight:600;font-size:15px;max-width:100%}
 .order{display:inline-flex;gap:2px}
@@ -48,28 +51,30 @@ h2 .cnt{color:var(--muted);font-weight:400;font-size:13px}
 .banner{background:var(--chip);border:1px solid var(--brand);border-radius:12px;padding:12px 14px;margin:0 0 14px}
 .search{flex:1;min-width:180px}
 @media print{header,nav.tabs,.toolbar,.mini,#tog{display:none!important}.card{break-inside:avoid}}
+main a:not([class]){color:var(--acc)}   /* body links: site accent in both themes (was the browser default blue — near-invisible in dark, 2026-10-24) */
 </style>
 </head>
 <body>
 <header>
-  <a class="brand" href="index.html" data-vv-brand data-short="स्वा·सहकारी" title="स्वाध्याय-सहकारी — Home" aria-label="स्वाध्याय-सहकारी — Home"><span class="bf">स्वाध्याय-सहकारी</span><span class="bs">स्वा·सहकारी</span></a>
+  <a class="brand" href="index.html" data-vv-brand data-short="अध्य·सहकारी" title="अध्ययन-सहकारी — Home" aria-label="अध्ययन-सहकारी — Home"><span class="bf">अध्ययन-सहकारी</span><span class="bs">अध्य·सहकारी</span></a>
   <h1>★ My library</h1>
-  <nav class="tabs"><a href="#bookmarks" data-tab="bookmarks">★ Bookmarks</a><a href="#collections" data-tab="collections">🗂 Collections</a><a href="#notes" data-tab="notes">📝 Notes</a><a href="#backup" data-tab="backup">⤓ Backup</a></nav>
+  <nav class="tabs"><a href="#bookmarks" data-tab="bookmarks">★ Bookmarks</a><a href="#collections" data-tab="collections">🗂 Collections</a><a href="#notes" data-tab="notes">📝 Notes</a><a href="#highlights" data-tab="highlights">🖍 Highlights</a><a href="#offline" data-tab="offline">📶 Offline</a><a href="#backup" data-tab="backup">⤓ Backup</a></nav>
   <button id="tog" title="light / dark">◐</button>
 </header>
 <main>
-  <p class="note-top">Stored only in this browser (shared by all our sites on this address) — nothing is sent to any server. Clearing browser data deletes it: use <a href="#backup">Backup → Export</a> to keep a copy or move it to another device.</p>
+  <p class="note-top">Stored in this browser (shared by all our sites on this address) — nothing is sent to any server (<a href="privacy.html">privacy</a>). Clearing browser data deletes it: use <a href="#backup">Backup → Export</a> to keep a copy or move it to another device.</p>
   <div id="view"></div>
 </main>
 <script src="vv-store.js"></script>
+<script src="vv-offline.js"></script>
 <script>
 (function () {
   'use strict';
   var S = window.VVStore, V = document.getElementById('view');
   var r = document.documentElement;
   document.getElementById('tog').onclick = function () { var c = r.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light'); r.setAttribute('data-theme', c === 'dark' ? 'light' : 'dark'); };
-  // brand follows the site this copy is served from (academy / public = स्वाध्याय-सहकारी, sister site = साहित्य-व्याकरणम्)
-  if (S.SITE === 'sahitya') { var b = document.querySelector('.brand'); b.querySelector('.bf').textContent = 'साहित्य-व्याकरणम्'; b.querySelector('.bs').textContent = 'सा·व्या'; b.setAttribute('data-short', 'सा·व्या'); b.title = b.getAttribute('aria-label').replace('स्वाध्याय-सहकारी', 'साहित्य-व्याकरणम्'); r.style.setProperty('--brand', '#4f46e5'); r.style.setProperty('--acc', '#4f46e5'); document.title = document.title.replace('स्वाध्याय-सहकारी', 'साहित्य-व्याकरणम्'); }
+  // brand follows the site this copy is served from (academy / public = अध्ययन-सहकारी, sister site = साहित्य-व्याकरणम्)
+  if (S.SITE === 'sahitya') { var b = document.querySelector('.brand'); b.querySelector('.bf').textContent = 'साहित्य-व्याकरणम्'; b.querySelector('.bs').textContent = 'सा·व्या'; b.setAttribute('data-short', 'सा·व्या'); b.title = b.getAttribute('aria-label').replace('अध्ययन-सहकारी', 'साहित्य-व्याकरणम्'); r.style.setProperty('--brand', '#4f46e5'); r.style.setProperty('--acc', '#4f46e5'); document.title = document.title.replace('अध्ययन-सहकारी', 'साहित्य-व्याकरणम्'); }
   S.rememberSite();
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -127,10 +132,36 @@ h2 .cnt{color:var(--muted);font-weight:400;font-size:13px}
     f.oninput = function () { var q = f.value.trim(); [].forEach.call(V.querySelectorAll('.card'), function (c) { c.style.display = !q || c.textContent.indexOf(q) >= 0 ? '' : 'none'; }); };
   }
 
+  // ---- 🖍 highlights (Harsha 2026-10-21): marked passages + note + tags; filter by tag; "not found" when the last visit couldn't
+  // place the words (the text changed in a rebuild) — the record is kept, never silently re-anchored. ----
+  var tagOn = null;
+  function hlUrl(h) {   // open the verse with the words marked (vv-landing ?hl= + hv=1 → verse-only)
+    var q = (h.text || '').split(/\s+/).slice(0, 8).join(' ');
+    return h.url.split('#')[0].split('?')[0] + (q ? '?hl=' + encodeURIComponent(q) + '&hv=1' : '') + (h.ref ? '#v-' + h.ref : '');
+  }
+  function renderHighlights() {
+    var hs = S.highlights.list().filter(function (h) { return !tagOn || (h.tags || []).indexOf(tagOn) >= 0; }), tags = S.highlights.tags();
+    var by = {}; hs.forEach(function (h) { var k = (h.title || '').replace(/\s+\S+$/, '') || h.page; (by[k] = by[k] || []).push(h); });
+    V.innerHTML = '<div class="toolbar"><input type="text" class="search" placeholder="search highlights, notes, tags…" id="flt"></div>'
+      + (tags.length ? '<div class="tagf"><button data-act="tag" data-tag=""' + (tagOn ? '' : ' class="on"') + '>all</button>' + tags.map(function (t) { return '<button data-act="tag" data-tag="' + esc(t.tag) + '"' + (tagOn === t.tag ? ' class="on"' : '') + '>#' + esc(t.tag) + ' <span class="cnt">' + t.n + '</span></button>'; }).join('') + '</div>' : '')
+      + (hs.length ? Object.keys(by).map(function (k) {
+          return '<h2 class="dv">' + esc(k) + ' <span class="cnt">' + by[k].length + '</span></h2>' + by[k].map(function (h) {
+            return '<div class="card" data-h="' + esc(h.id) + '"><div class="t"><a href="' + esc(hlUrl(h)) + '"' + (h.site && h.site !== S.SITE ? ' target="_blank" rel="noopener"' : '') + '>' + esc(h.title || h.ref) + '</a>' + siteTag(h.site)
+              + (h.placed === false ? ' <span class="warn" title="On your last visit the marked words were not found on that verse (the text was edited). The highlight is kept here; it is not painted on a guess.">⚠ not found on your last visit</span>' : '') + '</div>'
+              + '<div class="ex dv hlq">' + esc(h.text || '') + '</div>'
+              + (h.note ? '<div class="ex" style="white-space:pre-wrap;font-size:14px">✎ ' + esc(h.note) + '</div>' : '')
+              + '<div class="meta">' + day(h.created) + ' ' + (h.tags || []).map(function (t) { return '<span class="chip">#' + esc(t) + '</span>'; }).join(' ')
+              + ' <button class="mini" data-act="hnote">' + (h.note ? 'edit note' : 'add note') + '</button><button class="mini" data-act="htags">tags…</button><button class="mini" data-act="hdel">delete</button></div></div>';
+          }).join('');
+        }).join('') : '<div class="empty">' + (tagOn ? 'No highlights tagged #' + esc(tagOn) + '.' : 'No highlights yet — select words on a reading page and choose 🖍 highlight.') + '</div>');
+    var f = document.getElementById('flt');
+    f.oninput = function () { var q = f.value.trim(); [].forEach.call(V.querySelectorAll('.card'), function (c) { c.style.display = !q || c.textContent.indexOf(q) >= 0 ? '' : 'none'; }); };
+  }
+
   function renderBackup() {
-    var nb = S.bookmarks.list().length, nc = S.collections.list().length, nn = S.notes.list().length, nh = S.history.list().length;
-    V.innerHTML = '<div class="card"><b>Export</b> — download everything (' + nb + ' bookmarks, ' + nc + ' collections, ' + nn + ' notes, ' + nh + ' recent searches) as one file. Keep it safe, or import it on another device.<div class="meta"><button class="mini pri" data-act="export">⤓ export file</button></div></div>'
-      + '<div class="card"><b>Import</b> — merge an exported file into this browser. Nothing here is deleted; where the same item exists in both, the more recently edited copy wins.<div class="meta"><input type="file" id="imp" accept=".json,application/json"></div><div id="impmsg" class="meta"></div></div>';
+    var nb = S.bookmarks.list().length, nc = S.collections.list().length, nn = S.notes.list().length, nh = S.history.list().length, nhl = S.highlights.list().length;
+    V.innerHTML = '<div class="card"><b>Export</b> — download everything (' + nb + ' bookmarks, ' + nc + ' collections, ' + nn + ' notes, ' + nhl + ' highlights, ' + nh + ' recent searches) as one file. Keep it safe, or import it on another device.<div class="meta"><button class="mini pri" data-act="export">⤓ export file</button></div></div>'
+      + '<div class="card"><b>Import</b> — merge an exported file into this browser. Nothing here is deleted; where the same item exists in both, the more recently edited copy wins.' + (S.SITE === 'sahitya' ? '' : ' On a phone or tablet app, see <a href="help-mobile.html#library">📱 keeping your library safe</a>.') + '<div class="meta"><input type="file" id="imp" accept=".json,application/json"></div><div id="impmsg" class="meta"></div></div>';
     document.getElementById('imp').onchange = function (e) {
       var f = e.target.files[0]; if (!f) return;
       f.text().then(function (t) { var n = S.importAll(JSON.parse(t)); document.getElementById('impmsg').textContent = 'Imported — ' + n + ' item(s) added or updated.'; })
@@ -184,22 +215,61 @@ h2 .cnt{color:var(--muted);font-weight:400;font-size:13px}
     }
     else if (act === 'export') {
       var blob = new Blob([JSON.stringify(S.exportAll(), null, 1)], { type: 'application/json' });
-      var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'svadhyaya-dipika-library-' + new Date().toISOString().slice(0, 10) + '.json'; a.click();
+      var fname = 'adhyayana-sahakari-library-' + new Date().toISOString().slice(0, 10) + '.json';
+      var download = function () { var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fname; a.click(); };
+      // iOS home-screen app: a download link is unreliable there — hand the file to the share sheet (Save to Files / AirDrop / Mail)
+      var file = null; try { file = new File([blob], fname, { type: 'application/json' }); } catch (x) {}
+      if (navigator.standalone === true && file && navigator.canShare && navigator.canShare({ files: [file] }))
+        navigator.share({ files: [file], title: fname }).catch(function (err) { if (!err || err.name !== 'AbortError') download(); });
+      else download();
     }
     else if (act === 'nedit') { var n = S.notes.get(nkey); var v2 = prompt('Edit note:', n.text); if (v2 !== null) { S.notes.set(nkey, Object.assign({}, n, { text: v2 })); render(); } }
     else if (act === 'ndel' && confirm('Delete this note?')) { S.notes.remove(nkey); render(); }
+    else if (act === 'tag') { tagOn = e.target.closest('[data-tag]').getAttribute('data-tag') || null; render(); }
+    else if (act === 'hnote' || act === 'htags' || act === 'hdel') {
+      var hid = e.target.closest('[data-h]').getAttribute('data-h'), h = S.highlights.get(hid); if (!h) return;
+      if (act === 'hdel' && confirm('Delete this highlight?')) { S.highlights.remove(hid); render(); }
+      else if (act === 'hnote') { var v3 = prompt('Note for this highlight:', h.note || ''); if (v3 !== null) { S.highlights.update(hid, { note: v3.trim() }); render(); } }
+      else if (act === 'htags') { var v4 = prompt('Tags (comma-separated):', (h.tags || []).join(', ')); if (v4 !== null) { S.highlights.update(hid, { tags: v4.split(',').map(function (x) { return x.trim().replace(/^#/, ''); }).filter(Boolean).filter(function (x, i, a) { return a.indexOf(x) === i; }) }); render(); } }
+    }
   });
   V.addEventListener('change', function (e) {
     if (e.target.getAttribute('data-act') === 'rename') { var sec = e.target.closest('[data-c]'); var v = e.target.value.trim(); if (v) S.collections.rename(sec.getAttribute('data-c'), v); }
   });
 
+  // 📶 Offline (2026-10-23): texts saved with ☰ → "Save this text for offline" on a reading page (vv-offline.js); each opens
+  // offline and can be removed. Saved texts refresh themselves (only changed files) whenever the reader is online.
+  function renderOffline() {
+    var O = window.VVOffline;
+    if (!O || !O.supported()) { V.innerHTML = '<div class="empty">Offline reading isn’t available in this browser or on this site.</div>'; return; }
+    V.innerHTML = '<div class="empty">Loading…</div>';
+    O.list().then(function (rows) {
+      if (tab !== 'offline') return;
+      var tot = rows.reduce(function (n, r) { return n + (r.bytes || 0); }, 0);
+      V.innerHTML = '<p class="note-top" style="margin-top:0">To read a text without a connection, open any of its pages and choose <b>☰ → ⤓ Save this text for offline</b> (you pick which separate commentaries, and search within the text, to include). Saved texts update themselves when you are online. Pages you have simply opened are kept too. <a href="help-mobile.html#offline">More</a></p>'
+        + (rows.length ? rows.map(function (r) {
+            return '<div class="card" data-k="' + esc(r.key) + '"><b>' + esc(r.title) + '</b>' + (r.includes && r.includes.length ? '<div class="meta">with ' + esc(r.includes.join(' · ')) + '</div>' : '')
+              + '<div class="meta">' + O.mb(r.bytes || 0) + ' · saved ' + esc(r.at ? new Date(r.at).toLocaleDateString() : '')
+              + ' · <a href="' + esc(r.first) + '">open</a> <button class="mini" data-act="offchg">change</button> <button class="mini" data-act="offdel">remove</button></div></div>';
+          }).join('') + '<div class="meta">' + rows.length + ' text' + (rows.length === 1 ? '' : 's') + ' · ' + O.mb(tot) + ' in all</div>'
+          : '<div class="empty">No texts saved yet.</div>');
+      V.onclick = function (e) {
+        var c = e.target.closest && e.target.closest('[data-act="offchg"]');   // the save dialog: which commentaries + search to keep
+        if (c) { O.chooser(c.closest('[data-k]').getAttribute('data-k'), function () { if (tab === 'offline') render(); }); return; }
+        var b = e.target.closest && e.target.closest('[data-act="offdel"]'); if (!b) return;
+        var k = b.closest('[data-k]').getAttribute('data-k'), t = b.closest('.card').querySelector('b').textContent;
+        if (confirm('Remove “' + t + '” from this device? You can save it again any time.')) O.remove(k).then(render);
+      };
+      if (navigator.onLine) O.refresh();
+    }, function () { V.innerHTML = '<div class="empty">Offline reading isn’t available on this site.</div>'; });
+  }
   var tab = 'bookmarks';
-  function render() { V.onclick = null; ({ bookmarks: renderBookmarks, collections: renderCollections, notes: renderNotes, backup: renderBackup })[tab](); }
+  function render() { V.onclick = null; ({ bookmarks: renderBookmarks, collections: renderCollections, notes: renderNotes, highlights: renderHighlights, offline: renderOffline, backup: renderBackup })[tab](); }
   function route() {
     var h = location.hash.slice(1);
     [].forEach.call(document.querySelectorAll('nav.tabs a'), function (a) { a.classList.remove('on'); });
     if (h.indexOf('c=') === 0) { renderShared(h.slice(2)); return; }
-    tab = { bookmarks: 1, collections: 1, notes: 1, backup: 1 }[h] ? h : 'bookmarks';
+    tab = { bookmarks: 1, collections: 1, notes: 1, highlights: 1, offline: 1, backup: 1 }[h] ? h : 'bookmarks';
     document.querySelector('nav.tabs a[data-tab="' + tab + '"]').classList.add('on');
     render();
   }
